@@ -10,8 +10,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   // Dummy Data
   final Map<String, String> userData = {
-    'name': 'John Doe',
-    'email': 'johndoe@gmail.com',
+    'name': 'Eman-e-Khalis',
+    'email': 'masjidtouheed@gmail.com',
     'contact': '+92 300 1234567',
     'creation-Time': '2025-08-28',
   };

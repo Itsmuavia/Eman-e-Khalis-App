@@ -4,9 +4,12 @@ class Assets {
 
   static const String fontsPacificoRegular = 'assets/fonts/Pacifico-Regular.ttf';
   static const String fontsSourceSans3BoldItalic = 'assets/fonts/SourceSans3-BoldItalic.ttf';
+  static const String imagesAllahooakbar = 'assets/images/allahooakbar.png';
   static const String imagesApplogo = 'assets/images/applogo.png';
-  static const String imagesImg = 'assets/images/allahooakbar.png';
+  static const String imagesImgkhanakabah = 'assets/images/imgkhanakabah.png';
+  static const String imagesKhanakabah = 'assets/images/khanakabah.png';
   static const String imagesMosqueBlack = 'assets/images/mosque-black.png';
   static const String imagesQuran = 'assets/images/quran.png';
+  static const String imagesSplashlogo = 'assets/images/splashlogo.png';
 
 }
