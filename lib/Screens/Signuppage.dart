@@ -1,5 +1,6 @@
 import 'package:emane_khalis_app/Screens/Loginpage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Signuppage extends StatefulWidget {
   const Signuppage({super.key});
@@ -47,14 +48,14 @@ class _SignuppageState extends State<Signuppage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "اسلام علیکم",
-                      style: TextStyle(
+                    Text(
+                      'اِيمَانٌ خَالِصٌ',
+                      style: GoogleFonts.scheherazadeNew(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
-                        fontFamily: 'Pacifico',
                       ),
+                      textDirection: TextDirection.rtl, // Arabic ke liye zaroori
                     ),
                     const SizedBox(height: 8),
                     const Text(

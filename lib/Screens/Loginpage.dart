@@ -1,8 +1,11 @@
+import 'package:emane_khalis_app/Screens/Bottomnavbar.dart';
 import 'package:emane_khalis_app/Screens/Forgetpassword.dart';
+import 'package:emane_khalis_app/Screens/Homepage.dart';
 import 'package:emane_khalis_app/Screens/Signuppage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,14 +53,14 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "اسلام علیکم",
-                      style: TextStyle(
+                    Text(
+                      'اِيمَانٌ خَالِصٌ',
+                      style: GoogleFonts.scheherazadeNew(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
-                        fontFamily: 'Pacifico',
                       ),
+                      textDirection: TextDirection.rtl, // Arabic ke liye zaroori
                     ),
                     const SizedBox(height: 8),
                     const Text(
@@ -122,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: const Text(
                           "Forgot Password?",
-                          style: TextStyle(fontSize: 14, color: Colors.green),
+                          style: TextStyle(fontSize: 14, color: Colors.red),
                         ),
                       ),
                     ),
@@ -138,7 +141,10 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (
+                            context) => Bottomnavbar()));
+                      },
                       child: const Text(
                         "Login",
                         style: TextStyle(fontSize: 16, color: Colors.white),

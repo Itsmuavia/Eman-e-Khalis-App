@@ -1,5 +1,6 @@
 import 'package:emane_khalis_app/Screens/Loginpage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Forgetpassword extends StatefulWidget {
   const Forgetpassword({super.key});
@@ -45,14 +46,14 @@ class _ForgetpasswordState extends State<Forgetpassword> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "اسلام علیکم",
-                      style: TextStyle(
+                    Text(
+                      'اِيمَانٌ خَالِصٌ',
+                      style: GoogleFonts.scheherazadeNew(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
-                        fontFamily: 'Pacifico',
                       ),
+                      textDirection: TextDirection.rtl, // Arabic ke liye zaroori
                     ),
                     const SizedBox(height: 8),
                     const Text(
