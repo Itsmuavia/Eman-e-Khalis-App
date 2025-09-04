@@ -45,6 +45,11 @@ dependencies:
   lottie:
   video_player:
   intl:
+  geolocator:
+  permission_handler:
+  flutter_compass:
+  flutter_qiblah:
+  location:
 
 dev_dependencies:
   flutter_test:

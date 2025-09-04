@@ -22,17 +22,17 @@ class _VideodetailsState extends State<Videodetails> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(widget.video['url']!)
+      ..addListener(() {
+        if (mounted && _controller.value.isInitialized) {
+          setState(() {}); // Timeline ko sync rakhne ke liye
+        }
+      })
       ..initialize().then((_) {
-        setState(() {}); // Initial rebuild after loading
-        _controller.play();
+        if (mounted) {
+          setState(() {}); // Video initialize hone ke baad rebuild
+          _controller.play();
+        }
       });
-
-    // FIX: Add listener for real-time timeline update
-    _controller.addListener(() {
-      if (mounted) {
-        setState(() {}); // Keeps the timeline updating
-      }
-    });
   }
 
   @override
@@ -48,23 +48,23 @@ class _VideodetailsState extends State<Videodetails> {
   }
 
   void _skipForward() {
+    if (!_controller.value.isInitialized) return;
     final currentPosition = _controller.value.position;
     final newPosition = currentPosition + const Duration(seconds: 10);
-    if (newPosition < _controller.value.duration) {
-      _controller.seekTo(newPosition);
-    } else {
-      _controller.seekTo(_controller.value.duration);
-    }
+    _controller.seekTo(
+      newPosition < _controller.value.duration
+          ? newPosition
+          : _controller.value.duration,
+    );
   }
 
   void _skipBackward() {
+    if (!_controller.value.isInitialized) return;
     final currentPosition = _controller.value.position;
     final newPosition = currentPosition - const Duration(seconds: 10);
-    if (newPosition > Duration.zero) {
-      _controller.seekTo(newPosition);
-    } else {
-      _controller.seekTo(Duration.zero);
-    }
+    _controller.seekTo(
+      newPosition > Duration.zero ? newPosition : Duration.zero,
+    );
   }
 
   void _showCommentPopup() {
@@ -179,65 +179,68 @@ class _VideodetailsState extends State<Videodetails> {
                 _controller.value.isInitialized
                     ? VideoPlayer(_controller)
                     : const Center(child: CircularProgressIndicator()),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Column(
-                    children: [
-                      VideoProgressIndicator(
-                        _controller,
-                        allowScrubbing: true,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        colors: VideoProgressColors(
-                          playedColor: Colors.green.shade700,
-                          backgroundColor: Colors.grey.shade300,
+                if (_controller.value.isInitialized)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Column(
+                      children: [
+                        VideoProgressIndicator(
+                          _controller,
+                          allowScrubbing: true,
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          colors: VideoProgressColors(
+                            playedColor: Colors.green.shade700,
+                            backgroundColor: Colors.grey.shade300,
+                          ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              _controller.value.isPlaying
-                                  ? Icons.pause
-                                  : Icons.play_arrow,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              setState(() {
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: Icon(
                                 _controller.value.isPlaying
-                                    ? _controller.pause()
-                                    : _controller.play();
-                              });
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.replay_10, color: Colors.white),
-                            onPressed: _skipBackward,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.forward_10, color: Colors.white),
-                            onPressed: _skipForward,
-                          ),
-                          Text(
-                            "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              isFullscreen
-                                  ? Icons.fullscreen_exit
-                                  : Icons.fullscreen,
-                              color: Colors.white,
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _controller.value.isPlaying
+                                      ? _controller.pause()
+                                      : _controller.play();
+                                });
+                              },
                             ),
-                            onPressed: _toggleFullscreen,
-                          ),
-                        ],
-                      ),
-                    ],
+                            IconButton(
+                              icon: const Icon(Icons.replay_10,
+                                  color: Colors.white),
+                              onPressed: _skipBackward,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.forward_10,
+                                  color: Colors.white),
+                              onPressed: _skipForward,
+                            ),
+                            Text(
+                              "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                isFullscreen
+                                    ? Icons.fullscreen_exit
+                                    : Icons.fullscreen,
+                                color: Colors.white,
+                              ),
+                              onPressed: _toggleFullscreen,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -264,8 +267,10 @@ class _VideodetailsState extends State<Videodetails> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _actionButton(Icons.thumb_up_alt_outlined, "Like", () {}),
-                        _actionButton(Icons.thumb_down_alt_outlined, "Dislike", () {}),
+                        _actionButton(
+                            Icons.thumb_up_alt_outlined, "Like", () {}),
+                        _actionButton(
+                            Icons.thumb_down_alt_outlined, "Dislike", () {}),
                         _actionButton(Icons.message, "Comment", _showCommentPopup),
                         _actionButton(Icons.download, "Download", () {}),
                         _actionButton(Icons.share, "Share", () {}),
@@ -296,64 +301,64 @@ class _VideodetailsState extends State<Videodetails> {
                         );
                       },
                     ),
-                    const Divider(),
-                    const Text(
-                      "Related Videos",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 160,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 5,
-                        itemBuilder: (context, index) => Container(
-                          width: 200,
-                          margin: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(15),
-                                  ),
-                                  child: Image.asset(
-                                    'assets/images/quran.png',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Related Video ${index + 1}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // const Divider(),
+                    // const Text(
+                    //   "Related Videos",
+                    //   style: TextStyle(
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // SizedBox(
+                    //   height: 160,
+                    //   child: ListView.builder(
+                    //     scrollDirection: Axis.horizontal,
+                    //     itemCount: 5,
+                    //     itemBuilder: (context, index) => Container(
+                    //       width: 200,
+                    //       margin: const EdgeInsets.symmetric(horizontal: 8),
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.white,
+                    //         borderRadius: BorderRadius.circular(15),
+                    //         boxShadow: [
+                    //           BoxShadow(
+                    //             color: Colors.black.withOpacity(0.1),
+                    //             blurRadius: 5,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       child: Column(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         children: [
+                    //           Expanded(
+                    //             child: ClipRRect(
+                    //               borderRadius: const BorderRadius.vertical(
+                    //                 top: Radius.circular(15),
+                    //               ),
+                    //               child: Image.asset(
+                    //                 'assets/images/quran.png',
+                    //                 fit: BoxFit.cover,
+                    //                 width: double.infinity,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.all(8.0),
+                    //             child: Text(
+                    //               "Related Video ${index + 1}",
+                    //               style: const TextStyle(
+                    //                 fontSize: 14,
+                    //                 fontWeight: FontWeight.w500,
+                    //               ),
+                    //               overflow: TextOverflow.ellipsis,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

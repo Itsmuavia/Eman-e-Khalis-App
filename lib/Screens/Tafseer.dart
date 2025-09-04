@@ -17,73 +17,73 @@ class _TafseerState extends State<Tafseer> {
   final List<Map<String, String>> surahData = [
     {
       "number": "1",
-      "name": "Al-Fatihah",
+      "name": "Al-Faṯihah",
       "place": "Meccah",
       "verses": "7 Verses",
-      "arabic": "الفاتحة",
+      "arabic": "ٱلْفَاتِحَةُ",
     },
     {
       "number": "2",
-      "name": "Al-Baqarah",
+      "name": "Al-Baqara",
       "place": "Medinah",
       "verses": "286 Verses",
-      "arabic": "البقرة",
+      "arabic": "ٱلْبَقَرَةُ",
     },
     {
       "number": "3",
-      "name": "Ali 'Imran",
+      "name": "Āl ʿImrān",
       "place": "Medinah",
       "verses": "200 Verses",
-      "arabic": "آل عمران",
+      "arabic": "آلِ عِمْرَانَ", // Diacritized
     },
     {
       "number": "4",
-      "name": "An-Nisa'",
+      "name": "An-Nisāʾ",
       "place": "Medinah",
       "verses": "176 Verses",
-      "arabic": "النساء",
+      "arabic": "ٱلنِّسَاءُ", // Diacritized
     },
     {
       "number": "5",
-      "name": "Al-Ma'idah",
+      "name": "Al-Mā’idah",
       "place": "Medinah",
       "verses": "120 Verses",
-      "arabic": "المائدة",
+      "arabic": "ٱلْمَائِدَةُ", // Diacritized
     },
     {
       "number": "6",
-      "name": "Al-An'am",
+      "name": "Al-Anʿām",
       "place": "Meccah",
       "verses": "165 Verses",
-      "arabic": "الأنعام",
+      "arabic": "ٱلْأَنْعَامُ", // Diacritized
     },
     {
       "number": "7",
-      "name": "Al-A'raf",
+      "name": "Al-Aʿrāf",
       "place": "Meccah",
       "verses": "206 Verses",
-      "arabic": "الأعراف",
+      "arabic": "ٱلْأَعْرَافُ", // Diacritized
     },
     {
       "number": "8",
-      "name": "Al-Anfal",
+      "name": "Al-Anfāl",
       "place": "Medinah",
       "verses": "75 Verses",
-      "arabic": "الأنفال",
+      "arabic": "ٱلْأَنْفَالُ", // Diacritized
     },
     {
       "number": "9",
       "name": "At-Tawbah",
       "place": "Medinah",
       "verses": "129 Verses",
-      "arabic": "التوبة",
+      "arabic": "ٱلتَّوْبَةُ", // Diacritized
     },
     {
       "number": "10",
-      "name": "Younus",
+      "name": "Yūnus",
       "place": "Meccah",
       "verses": "109 Verses",
-      "arabic": "يونس",
+      "arabic": "يُونُسُ", // Diacritized
     },
   ];
 
