@@ -50,6 +50,7 @@ dependencies:
   flutter_compass:
   flutter_qiblah:
   location:
+  syncfusion_flutter_calendar:
 
 dev_dependencies:
   flutter_test:

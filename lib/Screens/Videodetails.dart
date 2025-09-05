@@ -24,12 +24,12 @@ class _VideodetailsState extends State<Videodetails> {
     _controller = VideoPlayerController.network(widget.video['url']!)
       ..addListener(() {
         if (mounted && _controller.value.isInitialized) {
-          setState(() {}); // Timeline ko sync rakhne ke liye
+          setState(() {}); //
         }
       })
       ..initialize().then((_) {
         if (mounted) {
-          setState(() {}); // Video initialize hone ke baad rebuild
+          setState(() {});
           _controller.play();
         }
       });
@@ -156,7 +156,7 @@ class _VideodetailsState extends State<Videodetails> {
           ? null
           : AppBar(
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.grey),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xFF006A4E),
         title: Text(
           'اِيمَانٌ خَالِصٌ',
