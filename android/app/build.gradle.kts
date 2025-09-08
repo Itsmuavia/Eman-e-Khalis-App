@@ -7,8 +7,9 @@ plugins {
 
 android {
     namespace = "com.example.emane_khalis_app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 34
+    ndkVersion=25.2.9519653
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -24,8 +25,8 @@ android {
         applicationId = "com.example.emane_khalis_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 21
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }

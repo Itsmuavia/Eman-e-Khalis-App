@@ -209,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.green.shade100,
                 onTap: () =>
                 {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Qiblacompass()))
+                Navigator.push(context, MaterialPageRoute(builder: (context) => QiblaCompass()))
             }
             ),
             _buildCardButton(

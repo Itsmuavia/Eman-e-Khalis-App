@@ -14,7 +14,11 @@ class _EventsState extends State<Events> {
   CalendarView calendarView = CalendarView.month;
   CalendarController calendarController = CalendarController();
   DateTime _selectedDate = DateTime.now();
-  DateTime _currentMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
+  DateTime _currentMonth = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    1,
+  );
 
   final Map<DateTime, List<Meeting>> _eventsMap = {};
   late DateTime _minDate;
@@ -77,10 +81,19 @@ class _EventsState extends State<Events> {
     });
   }
 
+  String _formatTime(DateTime time) {
+    final hour = time.hour % 12 == 0 ? 12 : time.hour % 12;
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.hour >= 12 ? "PM" : "AM";
+    return "$hour:$minute $period";
+  }
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.green.shade50,
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 20),
         child: Column(
@@ -90,12 +103,9 @@ class _EventsState extends State<Events> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(onPressed: _goToPreviousMonth, icon: const Icon(Icons.arrow_back_ios)),
-                  Text(
-                    "${_currentMonth.month}-${_currentMonth.year}",
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  IconButton(onPressed: _goToNextMonth, icon: const Icon(Icons.arrow_forward_ios)),
+                  IconButton(onPressed: _goToPreviousMonth, icon: const Icon(Icons.arrow_back_ios, color: Colors.green)),
+                  Text("${_currentMonth.month}-${_currentMonth.year}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
+                  IconButton(onPressed: _goToNextMonth, icon: const Icon(Icons.arrow_forward_ios, color: Colors.green)),
                 ],
               ),
             ),
@@ -107,9 +117,10 @@ class _EventsState extends State<Events> {
                 _buildViewButton("Day", CalendarView.day),
               ],
             ),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10),
             Container(
-              height: 400, // Calendar ki height fix rakhi
+              width: screenWidth * 0.95,
+              height: 400,
               child: SfCalendar(
                 view: calendarView,
                 controller: calendarController,
@@ -119,9 +130,7 @@ class _EventsState extends State<Events> {
                 cellBorderColor: Colors.grey,
                 onTap: (details) {
                   if (details.date != null) {
-                    setState(() {
-                      _selectedDate = details.date!;
-                    });
+                    setState(() => _selectedDate = details.date!);
                   }
                 },
                 allowViewNavigation: false,
@@ -142,7 +151,7 @@ class _EventsState extends State<Events> {
                 children: [
                   Text(
                     "Date: ${_selectedDate.day}-${_selectedDate.month}-${_selectedDate.year}",
-                    style: const TextStyle(fontSize: 25, fontFamily: "Pacifico", color: Colors.blueGrey),
+                    style: const TextStyle(fontSize: 22, fontFamily: "Pacifico", color: Colors.green),
                   ),
                   const SizedBox(height: 8),
                   _buildEventList(),
@@ -195,17 +204,11 @@ class _EventsState extends State<Events> {
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.white,
-              child: Text(
-                '${_selectedDate.day}',
-                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-              ),
+              child: Text('${_selectedDate.day}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
             ),
-            title: Text(
-              event.eventName,
-              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-            ),
+            title: Text(event.eventName, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
             subtitle: Text(
-              "Location: ${event.location}\nTime: ${event.from.hour}:00 am - ${event.to.hour}:00 pm",
+              "Location: ${event.location}\nTime: ${_formatTime(event.from)} - ${_formatTime(event.to)}",
               style: const TextStyle(color: Colors.white),
             ),
           ),

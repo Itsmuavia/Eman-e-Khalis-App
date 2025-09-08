@@ -1,23 +1,26 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart';
-
+import 'package:adhan/adhan.dart';
+import 'package:intl/intl.dart';
 import 'dart:html' as html;
 
-class Qiblacompass extends StatefulWidget {
-  const Qiblacompass({super.key});
+class QiblaCompass extends StatefulWidget {
+  const QiblaCompass({super.key});
 
   @override
-  State<Qiblacompass> createState() => _QiblacompassState();
+  State<QiblaCompass> createState() => _QiblaCompassState();
 }
 
-class _QiblacompassState extends State<Qiblacompass> {
+class _QiblaCompassState extends State<QiblaCompass> {
   bool isLoading = true;
   String message = '';
   bool permissionDenied = false;
   bool isWebFallback = false;
+  PrayerTimes? prayerTimes;
+  Coordinates? coordinates;
 
   @override
   void initState() {
@@ -34,7 +37,6 @@ class _QiblacompassState extends State<Qiblacompass> {
       return;
     }
 
-    // Mobile: Location aur Compass check kare
     final permission = await Permission.location.request();
     if (!permission.isGranted) {
       setState(() {
@@ -58,6 +60,10 @@ class _QiblacompassState extends State<Qiblacompass> {
       }
     }
 
+    final locData = await location.getLocation();
+    coordinates = Coordinates(locData.latitude!, locData.longitude!);
+    _calculatePrayerTimes();
+
     final hasSensor = await FlutterQiblah.androidDeviceSensorSupport() ?? false;
     if (!hasSensor) {
       setState(() {
@@ -70,6 +76,17 @@ class _QiblacompassState extends State<Qiblacompass> {
     await FlutterQiblah.requestPermissions();
     setState(() => isLoading = false);
   }
+
+  void _calculatePrayerTimes() {
+    if (coordinates == null) return;
+
+    final params = CalculationMethod.karachi.getParameters();
+    params.madhab = Madhab.hanafi;
+
+    prayerTimes = PrayerTimes.today(coordinates!, params);
+  }
+
+  String _formatTime(DateTime time) => DateFormat('hh:mm a').format(time);
 
   Future<void> _openAppSettings() async {
     final opened = await openAppSettings();
@@ -110,10 +127,10 @@ class _QiblacompassState extends State<Qiblacompass> {
                 ? _buildPermissionDenied()
                 : _buildMobileCompass(),
           ),
+          if (prayerTimes != null) _buildPrayerTimesCard(),
         ],
       ),
     );
-
   }
 
   Widget _buildWebFallback() {
@@ -132,35 +149,22 @@ class _QiblacompassState extends State<Qiblacompass> {
               const url = "https://www.quranbookk.com/qibla-finder";
               html.window.open(url, "_blank");
             },
-            borderRadius: BorderRadius.circular(14),
-            splashColor: Colors.transparent, // Hides splash color
-            highlightColor: Colors.transparent, // Hides highlight overlay
-            hoverColor: Colors.transparent, // Hides hover shadow (especially on web)
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
-                decoration: BoxDecoration(
-                  color: Colors.teal.shade50,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Open Online Qibla Compass",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.teal,
-                      ),
-                    ),
-                  ],
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+              decoration: BoxDecoration(
+                color: Colors.teal.shade50,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: const Text(
+                "Open Online Qibla Compass",
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.teal,
                 ),
               ),
             ),
-          )
-
+          ),
         ],
       ),
     );
@@ -208,34 +212,90 @@ class _QiblacompassState extends State<Qiblacompass> {
         }
 
         final direction = snapshot.data!.qiblah;
-        return Center(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Image.asset(
-                "assets/images/compass_bg.png",
-                width: 250,
-                height: 250,
-              ),
-              Transform.rotate(
-                angle: direction * (3.141592653589793 / 180),
-                child: Image.asset(
-                  "assets/images/compass_needle.png",
-                  width: 150,
-                  height: 150,
+        final angle = direction.toStringAsFixed(2);
+        final radians = (direction * 3.141592653589793 / 180).toStringAsFixed(
+          4,
+        );
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset(
+                  "assets/images/compass_bg.png",
+                  width: 250,
+                  height: 250,
                 ),
-              ),
-              const Positioned(
-                bottom: 20,
-                child: Text(
-                  "Align arrow to face Qibla",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                Transform.rotate(
+                  angle: double.parse(radians),
+                  child: Image.asset(
+                    "assets/images/compass_needle.png",
+                    width: 150,
+                    height: 150,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "Qibla Angle: $angle°",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "Radians: $radians",
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
         );
       },
+    );
+  }
+
+  Widget _buildPrayerTimesCard() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green.shade100,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Today's Prayer Times",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          _prayerRow("Fajr", prayerTimes!.fajr),
+          _prayerRow("Dhuhr", prayerTimes!.dhuhr),
+          _prayerRow("Asr", prayerTimes!.asr),
+          _prayerRow("Maghrib", prayerTimes!.maghrib),
+          _prayerRow("Isha", prayerTimes!.isha),
+        ],
+      ),
+    );
+  }
+
+  Widget _prayerRow(String name, DateTime time) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            name,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          Text(
+            _formatTime(time),
+            style: const TextStyle(fontSize: 16, color: Colors.black87),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -50,8 +50,9 @@ dependencies:
   flutter_compass:
   flutter_qiblah:
   location:
-  syncfusion_flutter_calendar:
-
+  syncfusion_flutter_calendar: ^31.1.17
+  adhan_dart:
+  adhan:
 dev_dependencies:
   flutter_test:
     sdk: flutter
