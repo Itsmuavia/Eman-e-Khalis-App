@@ -8,8 +8,7 @@ plugins {
 android {
     namespace = "com.example.emane_khalis_app"
     compileSdk = 34
-    ndkVersion=25.2.9519653
-
+    ndkVersion = "25.2.9519653"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -17,24 +16,33 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "11"
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        // Unique Application ID
         applicationId = "com.example.emane_khalis_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // Minimum SDK version for your app
         minSdk = 21
+        // Target SDK version
         targetSdk = 34
+        // Flutter provides versionCode & versionName automatically
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // For now, using debug signing for release
+            signingConfig = signingConfigs.getByName("debug")
+            // Enable minification for release (optional)
+            isMinifyEnabled = false
+            proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+            )
+        }
+        debug {
             signingConfig = signingConfigs.getByName("debug")
         }
     }

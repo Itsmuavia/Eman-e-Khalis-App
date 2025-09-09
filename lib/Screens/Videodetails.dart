@@ -15,7 +15,6 @@ class Videodetails extends StatefulWidget {
 class _VideodetailsState extends State<Videodetails> {
   late VideoPlayerController _controller;
   bool isFullscreen = false;
-
   final List<Map<String, dynamic>> comments = [];
 
   @override
@@ -24,7 +23,7 @@ class _VideodetailsState extends State<Videodetails> {
     _controller = VideoPlayerController.network(widget.video['url']!)
       ..addListener(() {
         if (mounted && _controller.value.isInitialized) {
-          setState(() {}); //
+          setState(() {});
         }
       })
       ..initialize().then((_) {
@@ -42,29 +41,21 @@ class _VideodetailsState extends State<Videodetails> {
   }
 
   void _toggleFullscreen() {
-    setState(() {
-      isFullscreen = !isFullscreen;
-    });
+    setState(() => isFullscreen = !isFullscreen);
   }
 
   void _skipForward() {
     if (!_controller.value.isInitialized) return;
-    final currentPosition = _controller.value.position;
-    final newPosition = currentPosition + const Duration(seconds: 10);
-    _controller.seekTo(
-      newPosition < _controller.value.duration
-          ? newPosition
-          : _controller.value.duration,
-    );
+    final newPos = _controller.value.position + const Duration(seconds: 10);
+    _controller.seekTo(newPos < _controller.value.duration
+        ? newPos
+        : _controller.value.duration);
   }
 
   void _skipBackward() {
     if (!_controller.value.isInitialized) return;
-    final currentPosition = _controller.value.position;
-    final newPosition = currentPosition - const Duration(seconds: 10);
-    _controller.seekTo(
-      newPosition > Duration.zero ? newPosition : Duration.zero,
-    );
+    final newPos = _controller.value.position - const Duration(seconds: 10);
+    _controller.seekTo(newPos > Duration.zero ? newPos : Duration.zero);
   }
 
   void _showCommentPopup() {
@@ -73,6 +64,8 @@ class _VideodetailsState extends State<Videodetails> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12)),
           backgroundColor: Colors.white,
           title: const Text("Add Comment"),
           content: TextField(
@@ -93,6 +86,9 @@ class _VideodetailsState extends State<Videodetails> {
                 foregroundColor: Colors.white,
               ),
               onPressed: () {
+                if (commentController.text
+                    .trim()
+                    .isEmpty) return;
                 setState(() {
                   comments.add({
                     'user': 'Guest',
@@ -112,39 +108,35 @@ class _VideodetailsState extends State<Videodetails> {
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-    final seconds = duration.inSeconds.remainder(60);
-    return [
-      if (hours > 0) twoDigits(hours),
-      twoDigits(minutes),
-      twoDigits(seconds),
-    ].join(":");
+    final h = duration.inHours;
+    final m = duration.inMinutes.remainder(60);
+    final s = duration.inSeconds.remainder(60);
+    return [if (h > 0) twoDigits(h), twoDigits(m), twoDigits(s)].join(":");
   }
 
-  String timeAgo(DateTime commentTime) {
-    final diff = DateTime.now().difference(commentTime);
+  String timeAgo(DateTime time) {
+    final diff = DateTime.now().difference(time);
     if (diff.inSeconds < 60) return "${diff.inSeconds}s ago";
     if (diff.inMinutes < 60) return "${diff.inMinutes}m ago";
     if (diff.inHours < 24) return "${diff.inHours}h ago";
     if (diff.inDays < 7) return "${diff.inDays}d ago";
-    return DateFormat('dd MMM yyyy').format(commentTime);
+    return DateFormat('dd MMM yyyy').format(time);
   }
 
   Widget _actionButton(IconData icon, String label, VoidCallback onTap) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CircleAvatar(
-          backgroundColor: Colors.green.shade50,
-          child: IconButton(
-            icon: Icon(icon, color: Colors.green.shade800),
-            onPressed: onTap,
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: Colors.green.shade50,
+            child: Icon(icon, color: Colors.green.shade800),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 12)),
-      ],
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
     );
   }
 
@@ -155,17 +147,21 @@ class _VideodetailsState extends State<Videodetails> {
       appBar: isFullscreen
           ? null
           : AppBar(
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: const Color(0xFF006A4E),
-        title: Text(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title:  Text(
           'اِيمَانٌ خَالِصٌ',
           style: GoogleFonts.scheherazadeNew(
-            fontSize: 32,
+            fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.blueGrey.shade700,
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.green),
+          onPressed: () => Navigator.pop(context),
+        ),
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -177,13 +173,28 @@ class _VideodetailsState extends State<Videodetails> {
               alignment: Alignment.bottomCenter,
               children: [
                 _controller.value.isInitialized
-                    ? VideoPlayer(_controller)
+                    ? ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(10),
+                  ),
+                  child: VideoPlayer(_controller),
+                )
                     : const Center(child: CircularProgressIndicator()),
                 if (_controller.value.isInitialized)
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [Colors.black54, Colors.transparent],
+                      ),
+                    ),
+                  ),
+                if (_controller.value.isInitialized)
                   Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                    bottom: 8,
+                    left: 8,
+                    right: 8,
                     child: Column(
                       children: [
                         VideoProgressIndicator(
@@ -224,7 +235,9 @@ class _VideodetailsState extends State<Videodetails> {
                               onPressed: _skipForward,
                             ),
                             Text(
-                              "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
+                              "${_formatDuration(_controller.value
+                                  .position)} / ${_formatDuration(
+                                  _controller.value.duration)}",
                               style: const TextStyle(color: Colors.white),
                             ),
                             IconButton(
@@ -247,23 +260,24 @@ class _VideodetailsState extends State<Videodetails> {
           if (!isFullscreen)
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.video['title']!,
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
-                      "By: ${widget.video['writer']} • ${widget.video['duration']}",
+                      "By: ${widget.video['writer']} • ${widget
+                          .video['duration']}",
                       style: const TextStyle(color: Colors.grey),
                     ),
-                    const Divider(),
+                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -271,18 +285,17 @@ class _VideodetailsState extends State<Videodetails> {
                             Icons.thumb_up_alt_outlined, "Like", () {}),
                         _actionButton(
                             Icons.thumb_down_alt_outlined, "Dislike", () {}),
-                        _actionButton(Icons.message, "Comment", _showCommentPopup),
+                        _actionButton(
+                            Icons.message, "Comment", _showCommentPopup),
                         _actionButton(Icons.download, "Download", () {}),
                         _actionButton(Icons.share, "Share", () {}),
                       ],
                     ),
-                    const Divider(),
+                    const Divider(height: 30),
                     const Text(
                       "Comments",
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     ListView.builder(
@@ -291,72 +304,73 @@ class _VideodetailsState extends State<Videodetails> {
                       itemCount: comments.length,
                       itemBuilder: (context, index) {
                         final c = comments[index];
-                        return ListTile(
-                          leading: const CircleAvatar(
-                            child: Icon(Icons.person),
+                        return Card(
+                          elevation: 0,
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          child: ListTile(
+                            leading: const CircleAvatar(
+                                child: Icon(Icons.person)),
+                            title: Text(c['user']),
+                            subtitle:
+                            Text("${c['text']} • ${timeAgo(c['time'])}"),
                           ),
-                          title: Text(c['user']),
-                          subtitle:
-                          Text("${c['text']} • ${timeAgo(c['time'])}"),
                         );
                       },
                     ),
-                    // const Divider(),
+                    const Divider(height: 30),
                     // const Text(
                     //   "Related Videos",
                     //   style: TextStyle(
-                    //     fontSize: 18,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
+                    //       fontSize: 18, fontWeight: FontWeight.bold),
                     // ),
-                    // const SizedBox(height: 8),
+                    // const SizedBox(height: 10),
                     // SizedBox(
                     //   height: 160,
                     //   child: ListView.builder(
                     //     scrollDirection: Axis.horizontal,
                     //     itemCount: 5,
-                    //     itemBuilder: (context, index) => Container(
-                    //       width: 200,
-                    //       margin: const EdgeInsets.symmetric(horizontal: 8),
-                    //       decoration: BoxDecoration(
-                    //         color: Colors.white,
-                    //         borderRadius: BorderRadius.circular(15),
-                    //         boxShadow: [
-                    //           BoxShadow(
-                    //             color: Colors.black.withOpacity(0.1),
-                    //             blurRadius: 5,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       child: Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: [
-                    //           Expanded(
-                    //             child: ClipRRect(
-                    //               borderRadius: const BorderRadius.vertical(
-                    //                 top: Radius.circular(15),
+                    //     itemBuilder: (context, index) =>
+                    //         Container(
+                    //           width: 200,
+                    //           margin: const EdgeInsets.symmetric(horizontal: 8),
+                    //           decoration: BoxDecoration(
+                    //             color: Colors.white,
+                    //             borderRadius: BorderRadius.circular(15),
+                    //             boxShadow: [
+                    //               BoxShadow(
+                    //                 color: Colors.black.withOpacity(0.1),
+                    //                 blurRadius: 5,
                     //               ),
-                    //               child: Image.asset(
-                    //                 'assets/images/quran.png',
-                    //                 fit: BoxFit.cover,
-                    //                 width: double.infinity,
-                    //               ),
-                    //             ),
+                    //             ],
                     //           ),
-                    //           Padding(
-                    //             padding: const EdgeInsets.all(8.0),
-                    //             child: Text(
-                    //               "Related Video ${index + 1}",
-                    //               style: const TextStyle(
-                    //                 fontSize: 14,
-                    //                 fontWeight: FontWeight.w500,
+                    //           child: Column(
+                    //             crossAxisAlignment: CrossAxisAlignment.start,
+                    //             children: [
+                    //               Expanded(
+                    //                 child: ClipRRect(
+                    //                   borderRadius: const BorderRadius.vertical(
+                    //                       top: Radius.circular(15)),
+                    //                   child: Image.asset(
+                    //                     'assets/images/quran.png',
+                    //                     fit: BoxFit.cover,
+                    //                     width: double.infinity,
+                    //                   ),
+                    //                 ),
                     //               ),
-                    //               overflow: TextOverflow.ellipsis,
-                    //             ),
+                    //               Padding(
+                    //                 padding: const EdgeInsets.all(8.0),
+                    //                 child: Text(
+                    //                   "Related Video ${index + 1}",
+                    //                   style: const TextStyle(
+                    //                     fontSize: 14,
+                    //                     fontWeight: FontWeight.w500,
+                    //                   ),
+                    //                   overflow: TextOverflow.ellipsis,
+                    //                 ),
+                    //               ),
+                    //             ],
                     //           ),
-                    //         ],
-                    //       ),
-                    //     ),
+                    //         ),
                     //   ),
                     // ),
                   ],

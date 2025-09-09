@@ -224,14 +224,14 @@ class _QiblaCompassState extends State<QiblaCompass> {
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  "assets/images/compass_bg.png",
+                  "assets/images/compass.png",
                   width: 250,
                   height: 250,
                 ),
                 Transform.rotate(
                   angle: double.parse(radians),
                   child: Image.asset(
-                    "assets/images/compass_needle.png",
+                    "assets/images/needle.png",
                     width: 150,
                     height: 150,
                   ),
