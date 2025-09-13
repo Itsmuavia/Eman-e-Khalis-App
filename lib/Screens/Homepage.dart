@@ -10,31 +10,33 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageState extends State<Homepage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
-  bool showSearch = false;
   String _searchQuery = '';
-  int selectedTab = 0;
+  int _carouselIndex = 0;
+
+  late TabController _tabController; // 👈 TabController
 
   final List<String> images = [
-    'assets/images/allahooakbar.png',
     'assets/images/applogo.png',
-    'assets/images/imgkhanakabah.png',
-    'assets/images/splashlogo.png',
+    'assets/images/applogo.png',
+    'assets/images/applogo.png',
+    'assets/images/applogo.png',
   ];
 
   final List<Map<String, String>> videos = [
     {
-      'title': 'Surah Aal-e-Imran Ayat 92-101',
+      'title': 'Surah Aal-e-Imran Ayat 92-101 Tilawat & Translation',
       'writer': 'Fawad Shah',
-      'duration': '6:53 min',
+      'duration': '6:53',
       'thumbnail': 'assets/images/thumbnail1.png',
       'url': 'assets/videos/Surah Aal-e-Imran.mp4',
     },
     {
-      'title': 'Surah Tawbah Rukoo#2',
+      'title': 'Surah Tawbah Rukoo#2 Quran Tilawat & Tafseer in Urdu ',
       'writer': 'Furqan ul Huda',
-      'duration': '16:47 min',
+      'duration': '16:47',
       'thumbnail': 'assets/images/thumbnail2.png',
       'url': 'assets/videos/Surah At-Tawbah.mp4',
     },
@@ -78,175 +80,313 @@ class _HomepageState extends State<Homepage> {
         _searchQuery = _searchController.text.trim().toLowerCase();
       });
     });
+
+    _tabController = TabController(length: 3, vsync: this); // 👈 init tabs
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _tabController.dispose(); // 👈 dispose
     super.dispose();
+  }
+
+  List<Map<String, String>> _filterList(
+    List<Map<String, String>> list,
+    List<String> keys,
+  ) {
+    if (_searchQuery.isEmpty) return list;
+    return list.where((item) {
+      for (var key in keys) {
+        final value = item[key];
+        if (value != null && value.toLowerCase().contains(_searchQuery)) {
+          return true;
+        }
+      }
+      return false;
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    final filteredVideos = videos.where((v) =>
-    v["title"]!.toLowerCase().contains(_searchQuery) ||
-        v["writer"]!.toLowerCase().contains(_searchQuery)).toList();
-
-    final filteredArticles = articles.where((a) =>
-    a["title"]!.toLowerCase().contains(_searchQuery) ||
-        a["author"]!.toLowerCase().contains(_searchQuery)).toList();
-
-    final filteredEbooks = ebooks.where((e) =>
-    e["title"]!.toLowerCase().contains(_searchQuery) ||
-        e["author"]!.toLowerCase().contains(_searchQuery)).toList();
+    final filteredVideos = _filterList(videos, ['title', 'writer', 'duration']);
+    final filteredArticles = _filterList(articles, ['title', 'author']);
+    final filteredEbooks = _filterList(ebooks, ['title', 'author']);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F9F4),
+      backgroundColor: const Color(0xFFF4F9FF),
       body: SafeArea(
         child: Column(
           children: [
-            // Islamic Header
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFe6f0fb), Color(0xFFdff3ff)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(22),
+                  bottomRight: Radius.circular(22),
                 ),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Image.asset(
-                      //   "assets/images/applogo.png",
-                      //   width: 50,
-                      //   height: 40,
-                      // ),
-                      const SizedBox(width: 10),
-                      Text(
-                        'اِيمَانٌ خَالِصٌ',
-                        style: GoogleFonts.scheherazadeNew(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueGrey.shade700,
-                        ),
-                        textDirection: TextDirection.rtl,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Tooltip(
-                        message:"search",
-                        child: _buildIconButton(Icons.search, Colors.green.shade100, () {
-                          setState(() {
-                            showSearch = !showSearch;
-                          });
-                        }),
-                      ),
-                      const SizedBox(width: 8),
-                      Tooltip(
-                        message:"comment",
-                          child: _buildIconButton(Icons.message, Colors.blue.shade100, () {})),
-                      const SizedBox(width: 8),
-                      Tooltip(
-                          message: "logout",
-                          child: _buildIconButton(Icons.logout, Colors.red.shade100, () {})),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Search Bar
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: showSearch ? 55 : 0,
-              curve: Curves.easeInOut,
-              child: showSearch
-                  ? Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: "Search...",
-                    prefixIcon:
-                    const Icon(Icons.search, color: Colors.green),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-              )
-                  : null,
-            ),
-
-            // Slider
-            CarouselSlider(
-              options: CarouselOptions(
-                height: width * 0.4,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 0.8,
-              ),
-              items: images.map((imgUrl) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(imgUrl, fit: BoxFit.cover),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.black.withOpacity(0.2),
-                              Colors.transparent,
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
+                  // Branding Left
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade400,
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'اِيمَان',
+                              style: GoogleFonts.scheherazadeNew(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textDirection: TextDirection.rtl,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'اِيمَان خَالِص',
+                              style: GoogleFonts.scheherazadeNew(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.blueGrey.shade800,
+                              ),
+                              textDirection: TextDirection.rtl,
+                            ),
+                            Text(
+                              'Pure Faith',
+                              style: TextStyle(
+                                color: Colors.blueGrey.shade400,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              }).toList(),
-            ),
 
-            const SizedBox(height: 10),
-
-            // Tabs
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.green.shade50,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildTabButton("Videos", 0),
-                  _buildTabButton("Articles", 1),
-                  _buildTabButton("E-Books", 2),
+                  // Search Box
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      height: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.blue.shade100),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 6),
+                          const Icon(Icons.search, color: Colors.blueGrey),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                hintText: 'Search ......',
+                                border: InputBorder.none,
+                              ),
+                              textInputAction: TextInputAction.search,
+                            ),
+                          ),
+                          if (_searchQuery.isNotEmpty)
+                            GestureDetector(
+                              onTap: () {
+                                _searchController.clear();
+                                FocusScope.of(context).unfocus();
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Icon(
+                                  Icons.clear,
+                                  size: 18,
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-            // Content
+
+            // --- Scrollable Body ---
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: _buildTabContent(
-                    filteredVideos, filteredArticles, filteredEbooks),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+
+                    // --- Carousel Slider ---
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          gradient: LinearGradient(
+                            colors: [Colors.white, Colors.blue.shade50],
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blueGrey.withOpacity(0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(18),
+                              child: CarouselSlider(
+                                options: CarouselOptions(
+                                  height: width * 0.4,
+                                  autoPlay: true,
+                                  enlargeCenterPage: true,
+                                  viewportFraction: 0.92,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _carouselIndex = index;
+                                    });
+                                  },
+                                ),
+                                items: images.map((imgUrl) {
+                                  return Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      Image.asset(imgUrl, fit: BoxFit.cover),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.blue.shade900.withOpacity(
+                                                0.18,
+                                              ),
+                                              Colors.transparent,
+                                            ],
+                                            begin: Alignment.bottomCenter,
+                                            end: Alignment.topCenter,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 8,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: images.asMap().entries.map((entry) {
+                                  return Container(
+                                    width: _carouselIndex == entry.key ? 16 : 8,
+                                    height: 8,
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: _carouselIndex == entry.key
+                                          ? Colors.blue.shade700
+                                          : Colors.blue.shade200,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TabBar(
+                      controller: _tabController,
+                      labelColor: Colors.blue.shade800,
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 30),
+                      indicatorSize: TabBarIndicatorSize.label,
+                      unselectedLabelColor: Colors.blueGrey,
+                      indicator: const UnderlineTabIndicator(
+                        borderSide: BorderSide(width: 3, color: Colors.amber),
+                        insets: EdgeInsets.zero,
+                      ),
+                      tabs: [
+                        Tab(icon: Icon(Icons.ondemand_video), text: "Videos"),
+                        Tab(icon: Icon(Icons.article), text: "Articles"),
+                        Tab(icon: Icon(Icons.menu_book), text: "E-Books"),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 500,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          // Videos
+                          filteredVideos.isEmpty
+                              ? _emptyPlaceholder('No videos found.')
+                              : ListView(
+                                  children: filteredVideos
+                                      .map((v) => _buildVideoCard(v))
+                                      .toList(),
+                                ),
+
+                          // Articles
+                          filteredArticles.isEmpty
+                              ? _emptyPlaceholder('No articles found.')
+                              : ListView(
+                                  children: filteredArticles
+                                      .map((a) => _buildArticleCard(a))
+                                      .toList(),
+                                ),
+
+                          // Ebooks
+                          filteredEbooks.isEmpty
+                              ? _emptyPlaceholder('No ebooks found.')
+                              : ListView(
+                                  children: filteredEbooks
+                                      .map((e) => _buildEbookCard(e))
+                                      .toList(),
+                                ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -255,123 +395,188 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Widget _buildIconButton(IconData icon, Color bgColor, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: bgColor,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: Colors.black87, size: 22),
+  // --- Empty State ---
+  Widget _emptyPlaceholder(String text) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Text(text, style: TextStyle(color: Colors.blueGrey.shade400)),
       ),
     );
   }
 
-  Widget _buildTabButton(String text, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedTab = index;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: selectedTab == index ? Colors.green : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.green, width: 1),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: selectedTab == index ? Colors.white : Colors.green.shade800,
-            fontWeight: FontWeight.bold,
+  // --- Video Card ---
+  Widget _buildVideoCard(Map<String, String> video) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      elevation: 2,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Videodetails(video: video)),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      video['thumbnail'] ?? '',
+                      width: 110,
+                      height: 78,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 6,
+                    right: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        video['duration'] ?? '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 6,
+                    left: 6,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      child: const Icon(Icons.play_arrow, size: 14),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      video['title'] ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${video['writer']}',
+                      style: TextStyle(
+                        color: Colors.blueGrey.shade400,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(Icons.open_in_new, color: Colors.blue.shade700),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTabContent(
-      List<Map<String, String>> filteredVideos,
-      List<Map<String, String>> filteredArticles,
-      List<Map<String, String>> filteredEbooks) {
-    if (selectedTab == 0) {
-      return Column(
-        children: filteredVideos.map((video) {
-          return _buildCard(
-            thumbnail: video['thumbnail']!,
-            title: video['title']!,
-            subtitle: "${video['writer']} • ${video['duration']}",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Videodetails(video: video),
-                ),
-              );
-            },
-          );
-        }).toList(),
-      );
-    } else if (selectedTab == 1) {
-      return Column(
-        children: filteredArticles.map((article) {
-          return _buildCard(
-            thumbnail: article['thumbnail']!,
-            title: article['title']!,
-            subtitle: "By ${article['author']}",
-            description: article['description'],
-            onTap: () {},
-          );
-        }).toList(),
-      );
-    } else {
-      return Column(
-        children: filteredEbooks.map((ebook) {
-          return _buildCard(
-            thumbnail: ebook['thumbnail']!,
-            title: ebook['title']!,
-            subtitle: "By ${ebook['author']}",
-            description: ebook['description'],
-            onTap: () {},
-          );
-        }).toList(),
-      );
-    }
-  }
-
-  Widget _buildCard({
-    required String thumbnail,
-    required String title,
-    required String subtitle,
-    String? description,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildArticleCard(Map<String, String> article) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      elevation: 2,
       child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
+        contentPadding: const EdgeInsets.all(10),
         leading: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           child: Image.asset(
-            thumbnail,
-            width: 60,
-            height: 60,
+            article['thumbnail'] ?? '',
+            width: 74,
+            height: 74,
             fit: BoxFit.cover,
           ),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: description != null
-            ? Text("$subtitle\n$description",
-            style: const TextStyle(fontSize: 12))
-            : Text(subtitle),
-        trailing: const Icon(Icons.open_in_new, color: Colors.green),
-        onTap: onTap,
+        title: Text(
+          article['title'] ?? '',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          article['description'] ?? '',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('By', style: TextStyle(color: Colors.blueGrey.shade400)),
+            const SizedBox(height: 4),
+            Text(
+              article['author'] ?? '',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+        onTap: () {},
+      ),
+    );
+  }
+
+  Widget _buildEbookCard(Map<String, String> ebook) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      elevation: 2,
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(10),
+        leading: Container(
+          width: 50,
+          height: 70,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            gradient: LinearGradient(
+              colors: [Colors.blue.shade700, Colors.blue.shade400],
+            ),
+          ),
+          child: const Center(
+            child: Icon(Icons.menu_book, color: Colors.white),
+          ),
+        ),
+        title: Text(
+          ebook['title'] ?? '',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          ebook['description'] ?? '',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Text(
+          ebook['author'] ?? '',
+          style: TextStyle(color: Colors.blueGrey.shade600),
+        ),
+        onTap: () {},
       ),
     );
   }

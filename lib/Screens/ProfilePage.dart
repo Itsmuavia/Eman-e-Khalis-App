@@ -1,4 +1,6 @@
+import 'package:emane_khalis_app/Screens/Loginpage.dart';
 import 'package:emane_khalis_app/Screens/Qiblacompass.dart';
+import 'package:emane_khalis_app/Screens/Signuppage.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -16,19 +18,19 @@ class _ProfilePageState extends State<ProfilePage> {
   };
 
   void _showProfileEditDialog(BuildContext context) {
-    TextEditingController nameController = TextEditingController(
-        text: userData['name']);
-    TextEditingController emailController = TextEditingController(
-        text: userData['email']);
-    TextEditingController contactController = TextEditingController(
-        text: userData['contact']);
+    TextEditingController nameController =
+    TextEditingController(text: userData['name']);
+    TextEditingController emailController =
+    TextEditingController(text: userData['email']);
+    TextEditingController contactController =
+    TextEditingController(text: userData['contact']);
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16)),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text(
             "Edit Profile",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -60,11 +62,11 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                  "Cancel", style: TextStyle(color: Colors.white)),
+              child:
+              const Text("Cancel", style: TextStyle(color: Colors.white)),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               onPressed: () {
                 setState(() {
                   userData['name'] = nameController.text;
@@ -73,8 +75,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
                 Navigator.pop(context);
               },
-              child: const Text(
-                  "Update", style: TextStyle(color: Colors.white)),
+              child:
+              const Text("Update", style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -86,7 +88,8 @@ class _ProfilePageState extends State<ProfilePage> {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
-    Color? color,
+    Color? color1,
+    Color? color2,
   }) {
     return InkWell(
       onTap: onTap,
@@ -95,27 +98,32 @@ class _ProfilePageState extends State<ProfilePage> {
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
         decoration: BoxDecoration(
-          color: color ?? Colors.teal.shade50,
+          gradient: LinearGradient(
+            colors: [color1 ?? Colors.blue.shade100, color2 ?? Colors.blue.shade300],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
-            BoxShadow(color: Colors.black12,
-                blurRadius: 6,
+            BoxShadow(
+                color: Colors.blue.shade200.withOpacity(0.4),
+                blurRadius: 8,
+                spreadRadius: 2,
                 offset: const Offset(2, 3)),
           ],
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.teal.shade800, size: 26),
+            Icon(icon, color: Colors.white, size: 28),
             const SizedBox(width: 16),
             Text(
               title,
-              style: TextStyle(fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.teal.shade900),
+              style: const TextStyle(
+                  fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white),
             ),
             const Spacer(),
-            const Icon(
-                Icons.arrow_forward_ios, size: 16, color: Colors.black38),
+            const Icon(Icons.arrow_forward_ios,
+                size: 16, color: Colors.white70),
           ],
         ),
       ),
@@ -125,34 +133,54 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade50,
+      backgroundColor: Colors.blue.shade50,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 30),
-            const Center(
-              child: Text(
-                'More',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontFamily: "Pacifico",
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+            const SizedBox(height: 25),
+            Center(
+              child: Column(
+                children: [
+                  Icon(Icons.star, size: 35, color: Colors.amber.shade600),
+                  const SizedBox(height: 8),
+                  Text(
+                    'More',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontFamily: "Pacifico",
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue.shade900,
+                      shadows: [
+                        Shadow(
+                            color: Colors.blue.shade200,
+                            offset: const Offset(2, 2),
+                            blurRadius: 3)
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
+
             const SizedBox(height: 25),
+
+            // PROFILE CARD
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                gradient: LinearGradient(
+                  colors: [Colors.white, Colors.blue.shade50],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(color: Colors.black12,
+                  BoxShadow(
+                      color: Colors.blue.shade100,
                       blurRadius: 8,
-                      offset: Offset(2, 3))
+                      offset: const Offset(2, 3))
                 ],
               ),
               child: Row(
@@ -168,15 +196,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         Text(
                           userData['name']!,
-                          style: const TextStyle(fontSize: 18,
+                          style: const TextStyle(
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           userData['email']!,
-                          style: TextStyle(fontSize: 14, color: Colors.grey
-                              .shade700),
+                          style: TextStyle(
+                              fontSize: 14, color: Colors.grey.shade700),
                         ),
                       ],
                     ),
@@ -184,8 +213,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   Tooltip(
                     message: "Logout",
                     child: IconButton(
-                      icon: const Icon(
-                          Icons.logout, color: Colors.red, size: 28),
+                      icon: const Icon(Icons.logout,
+                          color: Colors.red, size: 28),
                       onPressed: () {
                         Navigator.pushReplacementNamed(context, '/login');
                       },
@@ -201,29 +230,67 @@ class _ProfilePageState extends State<ProfilePage> {
             _buildCardButton(
               icon: Icons.edit,
               title: "Edit Profile",
+              color1: Colors.indigo.shade300,
               onTap: () => _showProfileEditDialog(context),
             ),
             _buildCardButton(
-                icon: Icons.explore,
-                title: "Qibla",
-                color: Colors.green.shade100,
-                onTap: () =>
-                {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => QiblaCompass()))
-            }
-            ),
-            _buildCardButton(
-              icon: Icons.checklist_rtl,
-              title: "Ibadat Tracker",
-              color: Colors.blue.shade100,
-              onTap: () => Navigator.pushNamed(context, '/ibadat'),
+              icon: Icons.explore,
+              title: "Qibla",
+              color1: Colors.teal.shade300,
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => QiblaCompass()));
+              },
             ),
             _buildCardButton(
               icon: Icons.fingerprint,
-              title: "Tasbeeh Counter",
-              color: Colors.grey.shade400,
+              title: "Tasbeeh",
+              color1: Colors.blueGrey.shade300,
               onTap: () => Navigator.pushNamed(context, '/tasbeeh'),
             ),
+
+            const SizedBox(height: 25),
+
+            // LOGIN & SIGNUP BUTTONS IN ROW
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade400,
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                    },
+                    child: const Text("Login",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.shade400,
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Signuppage()));
+                    },
+                    child: const Text("Signup",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

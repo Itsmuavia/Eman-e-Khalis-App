@@ -318,61 +318,6 @@ class _VideodetailsState extends State<Videodetails> {
                       },
                     ),
                     const Divider(height: 30),
-                    // const Text(
-                    //   "Related Videos",
-                    //   style: TextStyle(
-                    //       fontSize: 18, fontWeight: FontWeight.bold),
-                    // ),
-                    // const SizedBox(height: 10),
-                    // SizedBox(
-                    //   height: 160,
-                    //   child: ListView.builder(
-                    //     scrollDirection: Axis.horizontal,
-                    //     itemCount: 5,
-                    //     itemBuilder: (context, index) =>
-                    //         Container(
-                    //           width: 200,
-                    //           margin: const EdgeInsets.symmetric(horizontal: 8),
-                    //           decoration: BoxDecoration(
-                    //             color: Colors.white,
-                    //             borderRadius: BorderRadius.circular(15),
-                    //             boxShadow: [
-                    //               BoxShadow(
-                    //                 color: Colors.black.withOpacity(0.1),
-                    //                 blurRadius: 5,
-                    //               ),
-                    //             ],
-                    //           ),
-                    //           child: Column(
-                    //             crossAxisAlignment: CrossAxisAlignment.start,
-                    //             children: [
-                    //               Expanded(
-                    //                 child: ClipRRect(
-                    //                   borderRadius: const BorderRadius.vertical(
-                    //                       top: Radius.circular(15)),
-                    //                   child: Image.asset(
-                    //                     'assets/images/quran.png',
-                    //                     fit: BoxFit.cover,
-                    //                     width: double.infinity,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               Padding(
-                    //                 padding: const EdgeInsets.all(8.0),
-                    //                 child: Text(
-                    //                   "Related Video ${index + 1}",
-                    //                   style: const TextStyle(
-                    //                     fontSize: 14,
-                    //                     fontWeight: FontWeight.w500,
-                    //                   ),
-                    //                   overflow: TextOverflow.ellipsis,
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

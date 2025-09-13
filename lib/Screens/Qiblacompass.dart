@@ -107,15 +107,21 @@ class _QiblaCompassState extends State<QiblaCompass> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Center(
-            child: Text(
-              "Qibla Compass",
-              style: const TextStyle(
-                fontSize: 32,
-                fontFamily: "Pacifico",
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
+          Icon(Icons.compass_calibration, size: 35, color: Colors.amber.shade600),
+          const SizedBox(height: 8),
+          Text(
+            'Qibla Direction',
+            style: TextStyle(
+              fontSize: 32,
+              fontFamily: "Pacifico",
+              fontWeight: FontWeight.bold,
+              color: Colors.blue.shade900,
+              shadows: [
+                Shadow(
+                    color: Colors.blue.shade200,
+                    offset: const Offset(2, 2),
+                    blurRadius: 3)
+              ],
             ),
           ),
           Expanded(
