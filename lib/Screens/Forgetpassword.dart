@@ -47,7 +47,7 @@ class _ForgetpasswordState extends State<Forgetpassword> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'اِيمَانٌ خَالِصٌ',
+                      'اِيمَان خَالِص',
                       style: GoogleFonts.scheherazadeNew(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,

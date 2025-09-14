@@ -49,7 +49,7 @@ class _SignuppageState extends State<Signuppage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'اِيمَانٌ خَالِصٌ',
+                      'اِيمَان خَالِص',
                       style: GoogleFonts.scheherazadeNew(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -182,8 +182,7 @@ class _SignuppageState extends State<Signuppage> {
                             "Login",
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
                             ),
                           ),
                         ),

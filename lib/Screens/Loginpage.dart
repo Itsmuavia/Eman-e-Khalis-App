@@ -54,13 +54,13 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'اِيمَانٌ خَالِصٌ',
+                      'اِيمَان خَالِص',
                       style: GoogleFonts.scheherazadeNew(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),
-                      textDirection: TextDirection.rtl, // Arabic ke liye zaroori
+                      textDirection: TextDirection.rtl,
                     ),
                     const SizedBox(height: 8),
                     const Text(
@@ -173,12 +173,12 @@ class _LoginPageState extends State<LoginPage> {
                             "Signup",
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
                             ),
                           ),
                         ),
                       ],
+
                     ),
 
                     const SizedBox(height: 15),

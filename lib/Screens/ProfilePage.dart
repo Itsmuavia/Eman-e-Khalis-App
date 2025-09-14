@@ -18,19 +18,23 @@ class _ProfilePageState extends State<ProfilePage> {
   };
 
   void _showProfileEditDialog(BuildContext context) {
-    TextEditingController nameController =
-    TextEditingController(text: userData['name']);
-    TextEditingController emailController =
-    TextEditingController(text: userData['email']);
-    TextEditingController contactController =
-    TextEditingController(text: userData['contact']);
+    TextEditingController nameController = TextEditingController(
+      text: userData['name'],
+    );
+    TextEditingController emailController = TextEditingController(
+      text: userData['email'],
+    );
+    TextEditingController contactController = TextEditingController(
+      text: userData['contact'],
+    );
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: const Text(
             "Edit Profile",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -42,19 +46,25 @@ class _ProfilePageState extends State<ProfilePage> {
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(
-                    labelText: "Name", border: OutlineInputBorder()),
+                  labelText: "Name",
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 10),
               TextField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                    labelText: "Email", border: OutlineInputBorder()),
+                  labelText: "Email",
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 10),
               TextField(
                 controller: contactController,
                 decoration: const InputDecoration(
-                    labelText: "Contact", border: OutlineInputBorder()),
+                  labelText: "Contact",
+                  border: OutlineInputBorder(),
+                ),
               ),
             ],
           ),
@@ -62,8 +72,10 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () => Navigator.pop(context),
-              child:
-              const Text("Cancel", style: TextStyle(color: Colors.white)),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
@@ -75,8 +87,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
                 Navigator.pop(context);
               },
-              child:
-              const Text("Update", style: TextStyle(color: Colors.white)),
+              child: const Text(
+                "Update",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -99,17 +113,21 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [color1 ?? Colors.blue.shade100, color2 ?? Colors.blue.shade300],
+            colors: [
+              color1 ?? Colors.blue.shade100,
+              color2 ?? Colors.blue.shade300,
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-                color: Colors.blue.shade200.withOpacity(0.4),
-                blurRadius: 8,
-                spreadRadius: 2,
-                offset: const Offset(2, 3)),
+              color: Colors.blue.shade200.withOpacity(0.4),
+              blurRadius: 8,
+              spreadRadius: 2,
+              offset: const Offset(2, 3),
+            ),
           ],
         ),
         child: Row(
@@ -119,11 +137,17 @@ class _ProfilePageState extends State<ProfilePage> {
             Text(
               title,
               style: const TextStyle(
-                  fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white),
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
             const Spacer(),
-            const Icon(Icons.arrow_forward_ios,
-                size: 16, color: Colors.white70),
+            const Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.white70,
+            ),
           ],
         ),
       ),
@@ -154,9 +178,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Colors.blue.shade900,
                       shadows: [
                         Shadow(
-                            color: Colors.blue.shade200,
-                            offset: const Offset(2, 2),
-                            blurRadius: 3)
+                          color: Colors.blue.shade200,
+                          offset: const Offset(2, 2),
+                          blurRadius: 3,
+                        ),
                       ],
                     ),
                   ),
@@ -178,16 +203,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.blue.shade100,
-                      blurRadius: 8,
-                      offset: const Offset(2, 3))
+                    color: Colors.blue.shade100,
+                    blurRadius: 8,
+                    offset: const Offset(2, 3),
+                  ),
                 ],
               ),
               child: Row(
                 children: [
                   const CircleAvatar(
                     radius: 35,
-                    backgroundImage: AssetImage("assets/images/splashlogo.png"),
+                    backgroundImage: AssetImage("assets/images/quran.png"),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -197,15 +223,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         Text(
                           userData['name']!,
                           style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           userData['email']!,
                           style: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade700),
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
+                          ),
                         ),
                       ],
                     ),
@@ -213,8 +242,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   Tooltip(
                     message: "Logout",
                     child: IconButton(
-                      icon: const Icon(Icons.logout,
-                          color: Colors.red, size: 28),
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.red,
+                        size: 28,
+                      ),
                       onPressed: () {
                         Navigator.pushReplacementNamed(context, '/login');
                       },
@@ -230,22 +262,24 @@ class _ProfilePageState extends State<ProfilePage> {
             _buildCardButton(
               icon: Icons.edit,
               title: "Edit Profile",
-              color1: Colors.indigo.shade300,
+              color1: Colors.indigo.shade500,
               onTap: () => _showProfileEditDialog(context),
             ),
             _buildCardButton(
               icon: Icons.explore,
               title: "Qibla",
-              color1: Colors.teal.shade300,
+              color1: Colors.teal.shade500,
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => QiblaCompass()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QiblaCompass()),
+                );
               },
             ),
             _buildCardButton(
               icon: Icons.fingerprint,
               title: "Tasbeeh",
-              color1: Colors.blueGrey.shade300,
+              color1: Colors.blueGrey.shade600,
               onTap: () => Navigator.pushNamed(context, '/tasbeeh'),
             ),
 
@@ -257,40 +291,58 @@ class _ProfilePageState extends State<ProfilePage> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade400,
+                      backgroundColor: Colors.amber.shade700,
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
                     },
-                    child: const Text("Login",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Pacifico"
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.shade400,
+                      backgroundColor: Colors.green.shade700,
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Signuppage()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Signuppage()),
+                      );
                     },
-                    child: const Text("Signup",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
+                    child: const Text(
+                      "Register",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: "Pacifico",
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

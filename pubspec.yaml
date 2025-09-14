@@ -35,10 +35,6 @@ dependencies:
   google_fonts:
   font_awesome_flutter:
   provider:
-  firebase_core:
-  cloud_firestore:
-  firebase_auth:
-  image_picker:
   achievement_view:
   curved_navigation_bar:
   carousel_slider:
@@ -53,6 +49,10 @@ dependencies:
   syncfusion_flutter_calendar: ^31.1.17
   adhan_dart:
   adhan:
+  video_thumbnail:
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

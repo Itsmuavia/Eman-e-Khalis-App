@@ -76,14 +76,15 @@ class _SplashScreenState extends State<SplashScreen> {
                   width: 320,
                   child: DefaultTextStyle(
                     style: GoogleFonts.cairoPlay(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 23,
+                      fontWeight: FontWeight.normal,
                       color: Colors.white,
+                      fontStyle: FontStyle.normal
                     ),
                     child: AnimatedTextKit(
                       animatedTexts: [
                         TypewriterAnimatedText(
-                          'Welcome To EMANE KHALIS',
+                          'Welcome To EMAN-E-KHALIS',
                           speed: const Duration(milliseconds: 150),
                         ),
                       ],

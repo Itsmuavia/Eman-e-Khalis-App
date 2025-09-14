@@ -16,14 +16,14 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
   final List<Map<String, String>> surahData = [
     {
       "number": "1",
-      "name": "Al-Faṯihah",
+      "name": "Al-Fatihah",
       "place": "Meccah",
       "verses": "7 Verses",
       "arabic": "ٱلْفَاتِحَةُ",
     },
     {
       "number": "2",
-      "name": "Al-Baqara",
+      "name": "Al-Baqarah",
       "place": "Medinah",
       "verses": "286 Verses",
       "arabic": "ٱلْبَقَرَةُ",
@@ -295,9 +295,12 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
                                     ),
                                     const SizedBox(width: 10),
                                     IconButton(
-                                      icon: Icon(
-                                        Icons.download,
-                                        color: Colors.blue.shade700,
+                                      icon: Tooltip(
+                                        message: "Download",
+                                        child: Icon(
+                                          Icons.download,
+                                          color: Colors.blue.shade700,
+                                        ),
                                       ),
                                       onPressed: () {
                                         ScaffoldMessenger.of(
@@ -312,21 +315,26 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
                                       },
                                     ),
                                     IconButton(
-                                      icon: Icon(
-                                        Icons.play_arrow,
-                                        color: Colors.green.shade700,
+                                      icon: Tooltip(
+                                        message: "Play audio",
+                                        child: Icon(
+                                          Icons.play_arrow,
+                                          color: Colors.green.shade700,
+                                        ),
                                       ),
                                       onPressed: () {
-                                        // TODO: play audio
+
                                       },
                                     ),
                                     IconButton(
-                                      icon: Icon(
-                                        Icons.open_in_new,
-                                        color: Colors.amber.shade700,
+                                      icon: Tooltip(
+                                        message: "Tafseer",
+                                        child: Icon(
+                                          Icons.open_in_new,
+                                          color: Colors.amber.shade700,
+                                        ),
                                       ),
                                       onPressed: () {
-                                        // TODO: open tafseer details page
                                       },
                                     ),
                                   ],
