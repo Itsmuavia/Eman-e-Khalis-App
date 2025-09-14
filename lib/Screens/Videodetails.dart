@@ -278,6 +278,7 @@ class _VideodetailsState extends State<Videodetails> {
                           _actionButton(Icons.thumb_up_alt_outlined, "Like", () {}),
                           _actionButton(Icons.thumb_down_alt_outlined, "Dislike", () {}),
                           _actionButton(Icons.message, "Comment", _showCommentPopup),
+                          _actionButton(Icons.download, "Download", (){}),
                           _actionButton(Icons.share, "Share", () {}),
                         ],
                       ),
