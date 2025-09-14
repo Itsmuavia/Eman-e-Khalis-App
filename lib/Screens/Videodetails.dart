@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:typed_data';
-
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class Videodetails extends StatefulWidget {
@@ -132,7 +131,7 @@ class _VideodetailsState extends State<Videodetails> {
           CircleAvatar(
             radius: 22,
             backgroundColor: Colors.blue.shade50,
-            child: Icon(icon, color: Colors.blue.shade700),
+            child: Icon(icon, color: Colors.blueGrey.shade500),
           ),
           const SizedBox(height: 4),
           Text(label, style: const TextStyle(fontSize: 12)),
@@ -147,118 +146,176 @@ class _VideodetailsState extends State<Videodetails> {
       backgroundColor: Colors.blue.shade50,
       appBar: isFullscreen
           ? null
-          : AppBar(
-        backgroundColor: Colors.blue.shade200,
-        iconTheme: IconThemeData(color: Colors.blueGrey),
-        elevation: 0,
-        title: Text(
-          'اِيمَانٌ خَالِص',
-          style: GoogleFonts.scheherazadeNew(fontSize: 26, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Column(
-        children: [
-          AspectRatio(
-            aspectRatio: _controller.value.isInitialized ? _controller.value.aspectRatio : 16 / 9,
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                _controller.value.isInitialized
-                    ? ClipRRect(
-                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
-                  child: VideoPlayer(_controller),
-                )
-                    : const Center(child: CircularProgressIndicator()),
-                if (_controller.value.isInitialized)
-                  Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [Colors.black54, Colors.transparent],
-                      ),
-                    ),
-                  ),
-                if (_controller.value.isInitialized)
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onHorizontalDragUpdate: (details) async {
-                            final box = context.findRenderObject() as RenderBox;
-                            final localDx = details.localPosition.dx.clamp(0, box.size.width);
-                            final relative = localDx / box.size.width;
-                            final seekPos = _controller.value.duration * relative;
-                            _controller.seekTo(seekPos);
-                            await _generateThumbnail(seekPos);
-                            setState(() => _hoverPosition = seekPos);
-                          },
-                          child: Stack(
-                            children: [
-                              VideoProgressIndicator(
-                                _controller,
-                                allowScrubbing: true,
-                                colors: VideoProgressColors(
-                                  playedColor: Colors.blue.shade700,
-                                  backgroundColor: Colors.white30,
-                                ),
-                              ),
-                              if (thumbnail != null && _hoverPosition != null)
-                                Positioned(
-                                  bottom: 30,
-                                  left: MediaQuery.of(context).size.width *
-                                      (_hoverPosition!.inMilliseconds / _controller.value.duration.inMilliseconds) -
-                                      40,
-                                  child: Container(
-                                    width: 80,
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.white),
-                                        borderRadius: BorderRadius.circular(6),
-                                        image: DecorationImage(
-                                            image: MemoryImage(thumbnail!), fit: BoxFit.cover)),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            IconButton(
-                              icon: Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                                  color: Colors.white),
-                              onPressed: () => setState(() {
-                                _controller.value.isPlaying ? _controller.pause() : _controller.play();
-                              }),
-                            ),
-                            IconButton(icon: const Icon(Icons.replay_10, color: Colors.white), onPressed: _skipBackward),
-                            IconButton(icon: const Icon(Icons.forward_10, color: Colors.white), onPressed: _skipForward),
-                            Text(
-                              "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
-                              style: const TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            IconButton(icon: Icon(isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen, color: Colors.white), onPressed: _toggleFullscreen),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
+          : PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFe6f0fb), Color(0xFFdff3ff)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(22),
+              bottomRight: Radius.circular(22),
             ),
           ),
-          if (!isFullscreen)
-            Expanded(
-              child: Container(
+          child: Row(
+            children: [
+              // Back Button
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.blueGrey),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const SizedBox(width:25),
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.blue.shade600,
+                      Colors.blue.shade400,
+                    ],
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    'اِيمَان',
+                    style: GoogleFonts.scheherazadeNew(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'اِيمَان خَالِص',
+                    style: GoogleFonts.scheherazadeNew(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blueGrey.shade800,
+                    ),
+                  ),
+                  Text(
+                    'Pure Faith',
+                    style: TextStyle(
+                      color: Colors.blueGrey.shade400,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            AspectRatio(
+              aspectRatio: _controller.value.isInitialized ? _controller.value.aspectRatio : 16 / 9,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  _controller.value.isInitialized
+                      ? ClipRRect(
+                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+                    child: VideoPlayer(_controller),
+                  )
+                      : const Center(child: CircularProgressIndicator()),
+                  if (_controller.value.isInitialized)
+                    Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [Colors.black54, Colors.transparent],
+                        ),
+                      ),
+                    ),
+                  if (_controller.value.isInitialized)
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onHorizontalDragUpdate: (details) async {
+                              final box = context.findRenderObject() as RenderBox;
+                              final localDx = details.localPosition.dx.clamp(0, box.size.width);
+                              final relative = localDx / box.size.width;
+                              final seekPos = _controller.value.duration * relative;
+                              _controller.seekTo(seekPos);
+                              await _generateThumbnail(seekPos);
+                              setState(() => _hoverPosition = seekPos);
+                            },
+                            child: Stack(
+                              children: [
+                                VideoProgressIndicator(
+                                  _controller,
+                                  allowScrubbing: true,
+                                  colors: VideoProgressColors(
+                                    playedColor: Colors.red,
+                                    backgroundColor: Colors.white30,
+                                  ),
+                                ),
+                                if (thumbnail != null && _hoverPosition != null)
+                                  Positioned(
+                                    bottom: 30,
+                                    left: MediaQuery.of(context).size.width *
+                                        (_hoverPosition!.inMilliseconds / _controller.value.duration.inMilliseconds) -
+                                        40,
+                                    child: Container(
+                                      width: 80,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.white),
+                                          borderRadius: BorderRadius.circular(6),
+                                          image: DecorationImage(
+                                              image: MemoryImage(thumbnail!), fit: BoxFit.cover)),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                icon: Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                    color: Colors.white),
+                                onPressed: () => setState(() {
+                                  _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                                }),
+                              ),
+                              IconButton(icon: const Icon(Icons.replay_10, color: Colors.white), onPressed: _skipBackward),
+                              IconButton(icon: const Icon(Icons.forward_10, color: Colors.white), onPressed: _skipForward),
+                              Text(
+                                "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
+                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                              ),
+                              IconButton(icon: Icon(isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen, color: Colors.white), onPressed: _toggleFullscreen),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            if (!isFullscreen)
+              Container(
                 padding: const EdgeInsets.all(14),
                 child: SingleChildScrollView(
                   child: Column(
@@ -268,7 +325,7 @@ class _VideodetailsState extends State<Videodetails> {
                           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 6),
                       Text(
-                        "By: ${widget.video['writer']} • ${widget.video['duration']}",
+                        "By: ${widget.video['writer']}",
                         style: TextStyle(color: Colors.blueGrey.shade700),
                       ),
                       const SizedBox(height: 14),
@@ -278,7 +335,7 @@ class _VideodetailsState extends State<Videodetails> {
                           _actionButton(Icons.thumb_up_alt_outlined, "Like", () {}),
                           _actionButton(Icons.thumb_down_alt_outlined, "Dislike", () {}),
                           _actionButton(Icons.message, "Comment", _showCommentPopup),
-                          _actionButton(Icons.download, "Download", (){}),
+                          _actionButton(Icons.download, "Download", () {}),
                           _actionButton(Icons.share, "Share", () {}),
                         ],
                       ),
@@ -307,8 +364,8 @@ class _VideodetailsState extends State<Videodetails> {
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

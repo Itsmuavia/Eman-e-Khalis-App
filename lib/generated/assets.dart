@@ -6,13 +6,14 @@ class Assets {
   static const String fontsSourceSans3BoldItalic = 'assets/fonts/SourceSans3-BoldItalic.ttf';
   static const String imagesApplogo = 'assets/images/applogo.png';
   static const String imagesCompass = 'assets/images/compass.png';
-  static const String imagesImg = 'assets/images/islamic_pattern.png';
+  static const String imagesIslamicPattern = 'assets/images/islamic_pattern.png';
   static const String imagesNeedle = 'assets/images/needle.png';
   static const String imagesQuran = 'assets/images/quran.png';
   static const String imagesThumbnail1 = 'assets/images/thumbnail1.png';
   static const String imagesThumbnail2 = 'assets/images/thumbnail2.png';
   static const String imagesThumbnail3 = 'assets/images/thumbnail3.png';
-  static const String videosSurah AalEImran = 'assets/videos/Surah Aal-e-Imran.mp4';
+  static const String imagesThumbnail4 = 'assets/images/thumbnail4.png';
+  static const String videosSurah AalEImran Ayat 2130 = 'assets/videos/Surah Aal-e-Imran Ayat 21-30.mp4';
   static const String videosSurah AtTawbah = 'assets/videos/Surah At-Tawbah.mp4';
 
 }

@@ -27,11 +27,12 @@ class _HomepageState extends State<Homepage>
 
   final List<Map<String, String>> videos = [
     {
-      'title': 'Surah Aal-e-Imran Ayat 92-101 Tilawat & Translation',
+      'title':
+          'Surah Aal-e-Imran Ayat 92-101 Quran Tilawat & Translation in Urdu ',
       'writer': 'Fawad Shah',
       'duration': '6:53',
       'thumbnail': 'assets/images/thumbnail1.png',
-      'url': 'assets/videos/Surah Aal-e-Imran.mp4',
+      'url': 'assets/videos/Surah Aal-e-Imran Ayat. 92-101.mp4',
     },
     {
       'title': 'Surah Tawbah Rukoo#2 Quran Tilawat & Tafseer in Urdu ',
@@ -39,6 +40,14 @@ class _HomepageState extends State<Homepage>
       'duration': '16:47',
       'thumbnail': 'assets/images/thumbnail2.png',
       'url': 'assets/videos/Surah At-Tawbah.mp4',
+    },
+    {
+      'title':
+          'Surah Aal-e-Imran Ayat 21-30 Quran Tilawat & Translation in Urdu ',
+      'writer': 'Fawad Shah',
+      'duration': '8:16',
+      'thumbnail': 'assets/images/thumbnail4.png',
+      'url': 'assets/videos/Surah Aal-e-Imran Ayat 21-30.mp4',
     },
   ];
 
@@ -112,8 +121,16 @@ class _HomepageState extends State<Homepage>
     double width = MediaQuery.of(context).size.width;
 
     final filteredVideos = _filterList(videos, ['title', 'writer', 'duration']);
-    final filteredArticles = _filterList(articles, ['title', 'author']);
-    final filteredEbooks = _filterList(ebooks, ['title', 'author']);
+    final filteredArticles = _filterList(articles, [
+      'title',
+      'author',
+      'thumbnail',
+    ]);
+    final filteredEbooks = _filterList(ebooks, [
+      'title',
+      'author',
+      'thumbnail',
+    ]);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F9FF),
@@ -482,19 +499,29 @@ class _HomepageState extends State<Homepage>
                         fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
                     Text(
-                      '${video['writer']}',
+                      'By ${video['writer']}',
                       style: TextStyle(
-                        color: Colors.blueGrey.shade400,
                         fontSize: 12,
+                        color: Colors.blueGrey.shade400,
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(Icons.open_in_new, color: Colors.blue.shade700),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Videodetails(video: video),
+                    ),
+                  );
+                },
+                child: Icon(Icons.play_circle, color: Colors.blue.shade700),
+              ),
             ],
           ),
         ),
@@ -550,17 +577,13 @@ class _HomepageState extends State<Homepage>
       elevation: 2,
       child: ListTile(
         contentPadding: const EdgeInsets.all(10),
-        leading: Container(
-          width: 50,
-          height: 70,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            gradient: LinearGradient(
-              colors: [Colors.blue.shade700, Colors.blue.shade400],
-            ),
-          ),
-          child: const Center(
-            child: Icon(Icons.menu_book, color: Colors.white),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            ebook['thumbnail'] ?? '',
+            width: 74,
+            height: 74,
+            fit: BoxFit.cover,
           ),
         ),
         title: Text(
@@ -572,9 +595,16 @@ class _HomepageState extends State<Homepage>
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: Text(
-          ebook['author'] ?? '',
-          style: TextStyle(color: Colors.blueGrey.shade600),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('By', style: TextStyle(color: Colors.blueGrey.shade400)),
+            const SizedBox(height: 4),
+            Text(
+              ebook['author'] ?? '',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ],
         ),
         onTap: () {},
       ),

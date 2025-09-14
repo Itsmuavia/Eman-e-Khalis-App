@@ -71,6 +71,80 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
       "arabic": "ٱلْأَنْفَالُ",
     },
   ];
+  final List<Map<String, String>> JuzData = [
+    {
+      "number": "1",
+      "name": "Juz 1",
+      "title": "Started at AL-FATIHA verse 1",
+      "arabic": "ٱلْفَاتِحَةُ",
+    },
+    {
+      "number": "2",
+      "name": "Juz 2",
+      "title": "Started at AL-BAQARAH verse 142",
+      "arabic": "ٱلْبَقَرَةُ",
+    },
+    {
+      "number": "3",
+      "name": "Juz 3",
+      "title": "Started at AL-BAQARAH verse 253",
+      "arabic": "آلِ عِمْرَانَ",
+    },
+    {
+      "number": "4",
+      "name": "Juz 4",
+      "title": "Started at ALI-IMRAN verse 92",
+      "arabic": "آلِ عِمْرَانَ",
+    },
+    {
+      "number": "5",
+      "name": "Juz 5",
+      "title": "Started at AN-NISA verse 24",
+      "arabic": "ٱلنِّسَاءُ",
+    },
+    {
+      "number": "6",
+      "name": "Juz 6",
+      "title": "Started at AN-NISA verse 148",
+      "arabic": "ٱلنِّسَاءُ",
+    },
+    {
+      "number": "7",
+      "name": "Juz 7",
+      "title": "Started at AL-MA'IDAH verse 83",
+      "arabic": "ٱلْمَائِدَةُ",
+    },
+    {
+      "number": "8",
+      "name": "Juz 8",
+      "title": "Started at AL-AN'AM verse 111",
+      "arabic": "ٱلْأَنْعَامُ",
+    },
+    {
+      "number": "9",
+      "name": "Juz 9",
+      "title": "Started at AL-AR'AF verse 88",
+      "arabic": "ٱلْأَعْرَافُ",
+    },
+    {
+      "number": "10",
+      "name": "Juz 10",
+      "title": "Started at AL-ANFAL verse 41",
+      "arabic": "ٱلْأَنْفَالُ",
+    },
+    {
+      "number": "11",
+      "name": "Juz 11",
+      "title": "Started at AN-NI'SA verse 156",
+      "arabic": "ٱلنِّسَاءُ",
+    },
+    {
+      "number": "12",
+      "name": "Juz 12",
+      "title": "Started at AL-AN'AM verse 145",
+      "arabic": "ٱلْأَنْعَامُ",
+    },
+  ];
 
   @override
   void initState() {
@@ -100,6 +174,16 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
           arabic.contains(_searchQuery) ||
           number.contains(_searchQuery);
     }).toList();
+    final filteredJuz = JuzData.where((juz) {
+      final number = juz["number"]!;
+      final name = juz["name"]!.toLowerCase();
+      final title = juz["title"]!.toLowerCase();
+      final arabic = juz["arabic"]!;
+      return name.contains(_searchQuery) ||
+          arabic.contains(_searchQuery) ||
+          number.contains(_searchQuery) ||
+          title.contains(_searchQuery);
+    }).toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F9FF),
@@ -111,10 +195,11 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
 
             return Column(
               children: [
-                // 🔹 Header + Search
                 Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [Colors.blue.shade50, Colors.blue.shade100],
@@ -206,8 +291,9 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
                                     FocusScope.of(context).unfocus();
                                   },
                                   child: const Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 6.0),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6.0,
+                                    ),
                                     child: Icon(
                                       Icons.clear,
                                       size: 18,
@@ -249,102 +335,167 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
                       // Surah List
                       filteredSurah.isEmpty
                           ? Center(
-                        child: Text(
-                          _searchQuery.isNotEmpty
-                              ? "Not Found"
-                              : "No Surah available",
-                          style: TextStyle(
-                            color: Colors.blueGrey.shade400,
-                            fontSize: isSmallScreen ? 13 : 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      )
-                          : ListView.builder(
-                        itemCount: filteredSurah.length,
-                        itemBuilder: (context, index) {
-                          final surah = filteredSurah[index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 6,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 2,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.blue.shade800,
-                                child: Text(
-                                  surah["number"]!,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize:
-                                    isSmallScreen ? 11 : 13,
-                                  ),
-                                ),
-                              ),
-                              title: Text(
-                                surah["name"]!,
+                              child: Text(
+                                _searchQuery.isNotEmpty
+                                    ? "Not Found"
+                                    : "No Surah available",
                                 style: TextStyle(
-                                  fontSize: isSmallScreen ? 13 : 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              subtitle: Text(
-                                "${surah["place"]} | ${surah["verses"]}",
-                                style: TextStyle(
-                                  fontSize: isSmallScreen ? 11 : 12,
                                   color: Colors.blueGrey.shade400,
+                                  fontSize: isSmallScreen ? 13 : 15,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                overflow: TextOverflow.ellipsis,
                               ),
-                              trailing: Wrap(
-                                spacing: isSmallScreen ? 4 : 6,
-                                children: [
-                                  Text(
-                                    surah["arabic"]!,
-                                    style: GoogleFonts.lateef(
-                                      fontSize:
-                                      isSmallScreen ? 17 : 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue.shade900,
+                            )
+                          : ListView.builder(
+                              itemCount: filteredSurah.length,
+                              itemBuilder: (context, index) {
+                                final surah = filteredSurah[index];
+                                return Card(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 6,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 2,
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: Colors.blue.shade800,
+                                      child: Text(
+                                        surah["number"]!,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: isSmallScreen ? 11 : 13,
+                                        ),
+                                      ),
                                     ),
-                                    overflow: TextOverflow.ellipsis,
+                                    title: Text(
+                                      surah["name"]!,
+                                      style: TextStyle(
+                                        fontSize: isSmallScreen ? 13 : 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    subtitle: Text(
+                                      "${surah["place"]} | ${surah["verses"]}",
+                                      style: TextStyle(
+                                        fontSize: isSmallScreen ? 11 : 12,
+                                        color: Colors.blueGrey.shade400,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    trailing: Wrap(
+                                      spacing: isSmallScreen ? 4 : 6,
+                                      children: [
+                                        Text(
+                                          surah["arabic"]!,
+                                          style: GoogleFonts.lateef(
+                                            fontSize: isSmallScreen ? 17 : 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.download,
+                                            color: Colors.blue.shade700,
+                                            size: isSmallScreen ? 20 : 24,
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.play_arrow,
+                                            color: Colors.green.shade700,
+                                            size: isSmallScreen ? 20 : 24,
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.open_in_new,
+                                            color: Colors.amber.shade700,
+                                            size: isSmallScreen ? 20 : 24,
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  IconButton(
-                                    icon: Icon(Icons.download,
-                                        color: Colors.blue.shade700,
-                                        size:
-                                        isSmallScreen ? 20 : 24),
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.play_arrow,
-                                        color: Colors.green.shade700,
-                                        size:
-                                        isSmallScreen ? 20 : 24),
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.open_in_new,
-                                        color: Colors.amber.shade700,
-                                        size:
-                                        isSmallScreen ? 20 : 24),
-                                    onPressed: () {},
-                                  ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
 
-                      // Juz tab
-                      const Center(child: Text("Juz Content Coming Soon")),
+                      filteredJuz.isEmpty
+                          ? const Center(child: Text("No Juz found"))
+                          : ListView.builder(
+                              itemCount: filteredJuz.length,
+                              itemBuilder: (context, index) {
+                                final juz = filteredJuz[index];
+                                return Card(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 6,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 2,
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: Colors.blue.shade700,
+                                      child: Text(
+                                        juz["number"]!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    title: Text(juz["name"]!),
+                                    subtitle: Text(
+                                      juz["title"]!,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    trailing: Wrap(
+                                      spacing: 6,
+                                      children: [
+                                        Text(
+                                          juz["arabic"]!,
+                                          style: GoogleFonts.lateef(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blue.shade900,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.bookmark_outline,
+                                            color: Colors.red.shade400,
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.open_in_new,
+                                            color: Colors.amber.shade700,
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
 
                       // Bookmarks tab
                       const Center(child: Text("Bookmarks will appear here")),
