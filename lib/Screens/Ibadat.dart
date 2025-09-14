@@ -22,13 +22,12 @@ class _IbadatState extends State<Ibadat> {
   final List<String> bannerImages = [
     "assets/images/thumbnail1.png",
     "assets/images/thumbnail2.png",
-    "assets/images/quran.png",
+    "assets/images/thumbnail3.png",
   ];
 
   int _currentIndex = 0;
   Timer? _timer;
 
-  // 🔹 Ab har item me route add kar diya future navigation ke liye
   final List<Map<String, String>> ibadatItems = [
     {"titleEn": "Prayer", "titleUr": "نماز", "icon": "🕌"},
     {"titleEn": "Fasting", "titleUr": "روزہ", "icon": "🌙"},
@@ -72,15 +71,14 @@ class _IbadatState extends State<Ibadat> {
   Widget build(BuildContext context) {
     final filteredItems = _filterList();
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F9FF),
+      backgroundColor: const Color(0xFFF9FAFB),
       body: SafeArea(
         child: Column(
           children: [
-            // 🔹 Fixed Top Bar
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [Color(0xFFe6f0fb), Color(0xFFdff3ff)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -113,7 +111,7 @@ class _IbadatState extends State<Ibadat> {
                               'عِبَادَات',
                               style: GoogleFonts.scheherazadeNew(
                                 color: Colors.white,
-                                fontSize: 11,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
                               textDirection: TextDirection.rtl,
@@ -138,7 +136,7 @@ class _IbadatState extends State<Ibadat> {
                               'Ibadat',
                               style: TextStyle(
                                 color: Colors.blueGrey.shade400,
-                                fontSize: 11,
+                                fontSize: 13,
                               ),
                             ),
                           ],
@@ -146,10 +144,12 @@ class _IbadatState extends State<Ibadat> {
                       ],
                     ),
                   ),
+
+                  // Search Box
                   Expanded(
                     flex: 4,
                     child: Container(
-                      height: 36,
+                      height: 35,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -194,7 +194,6 @@ class _IbadatState extends State<Ibadat> {
               ),
             ),
 
-            // 🔹 Scrollable Content
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -202,11 +201,16 @@ class _IbadatState extends State<Ibadat> {
                     // Banner
                     Container(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 16),
-                      height: 180,
+                        vertical: 14,
+                        horizontal: 16,
+                      ),
+                      height: 190,
                       width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(18),
                         child: AnimatedSwitcher(
                           duration: const Duration(seconds: 1),
                           child: Image.asset(
@@ -217,22 +221,22 @@ class _IbadatState extends State<Ibadat> {
                         ),
                       ),
                     ),
-
-                    // Grid
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 10),
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: filteredItems.length,
                         gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 1,
-                        ),
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 14,
+                              mainAxisSpacing: 14,
+                              childAspectRatio: 1,
+                            ),
                         itemBuilder: (context, index) {
                           final item = filteredItems[index];
                           return GestureDetector(
@@ -246,11 +250,8 @@ class _IbadatState extends State<Ibadat> {
                                 case "Fasting":
                                   nextPage = Signuppage();
                                   break;
-                                case "Hajj":
+                                case "Hajj / Umrah":
                                   nextPage = Tafseer();
-                                  break;
-                                case "Umrah":
-                                  nextPage = ProfilePage();
                                   break;
                                 case "Namaz-e-Janaza":
                                   nextPage = Bottomnavbar();
@@ -266,52 +267,64 @@ class _IbadatState extends State<Ibadat> {
 
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => nextPage),
+                                MaterialPageRoute(
+                                  builder: (context) => nextPage,
+                                ),
                               );
                             },
                             child: Container(
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.blue.shade50,
-                                    Colors.blue.shade100
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.blueGrey.shade100
-                                        .withOpacity(0.6),
+                                    color: Colors.blueGrey.shade100.withOpacity(
+                                      0.5,
+                                    ),
                                     blurRadius: 6,
                                     offset: const Offset(2, 3),
                                   ),
                                 ],
                                 border: Border.all(
-                                  color: Colors.blue.shade200,
-                                  width: 1.2,
+                                  color: Colors.amber.shade200,
+                                  width: 1,
+                                ),
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFFBBDEFB), // light blue
+                                    Color(0xFFFFF8E1), // light amber
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                image: const DecorationImage(
+                                  image: AssetImage(
+                                    "assets/images/islamic_pattern.png",
+                                  ),
+                                  fit: BoxFit.cover,
+                                  opacity: 0.3, //
                                 ),
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(item["icon"]!,
-                                      style: const TextStyle(fontSize: 40)),
+                                  Text(
+                                    item["icon"]!,
+                                    style: const TextStyle(fontSize: 42),
+                                  ),
                                   const SizedBox(height: 10),
                                   Text(
                                     item["titleEn"]!,
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue.shade900,
                                     ),
                                   ),
                                   Text(
                                     item["titleUr"]!,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.blueGrey.shade700,
+                                    style: GoogleFonts.scheherazadeNew(
+                                      fontSize: 20,
+                                      color: Colors.amber.shade800,
                                       fontWeight: FontWeight.w600,
                                     ),
                                     textDirection: TextDirection.rtl,

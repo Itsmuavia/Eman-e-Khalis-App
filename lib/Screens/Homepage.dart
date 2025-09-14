@@ -182,7 +182,7 @@ class _HomepageState extends State<Homepage>
                               'Pure Faith',
                               style: TextStyle(
                                 color: Colors.blueGrey.shade400,
-                                fontSize: 11,
+                                fontSize: 12,
                               ),
                             ),
                           ],

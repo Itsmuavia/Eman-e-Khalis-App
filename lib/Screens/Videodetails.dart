@@ -148,7 +148,8 @@ class _VideodetailsState extends State<Videodetails> {
       appBar: isFullscreen
           ? null
           : AppBar(
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.blue.shade200,
+        iconTheme: IconThemeData(color: Colors.blueGrey),
         elevation: 0,
         title: Text(
           'اِيمَانٌ خَالِص',
