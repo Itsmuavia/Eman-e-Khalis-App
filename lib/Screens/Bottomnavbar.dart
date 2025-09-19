@@ -18,11 +18,11 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   int index = 2; // By default Home show karega (center position)
 
   final screens = [
-    const Tafseer(),   // 0
-    const Ibadat(),    // 1
-    const Homepage(),  // 2 (HOME always center)
-    const Qna(),       // 3
-    const ProfilePage()// 4
+    const Tafseer(), // 0
+    const Ibadat(), // 1
+    const Homepage(), // 2 (HOME always center)
+    const Qna(), // 3
+    const ProfilePage(), // 4
   ];
 
   @override
@@ -59,7 +59,8 @@ class _BottomnavbarState extends State<Bottomnavbar> {
           BottomNavigationBar(
             currentIndex: index,
             backgroundColor: Colors.transparent,
-            selectedItemColor: const Color(0xFFFFD700), // Golden
+            selectedItemColor: const Color(0xFFFFD700),
+            // Golden
             unselectedItemColor: Colors.white,
             type: BottomNavigationBarType.fixed,
             selectedFontSize: 13,
@@ -96,7 +97,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
 
           // Floating Home Button (center)
           Positioned(
-            bottom: 8,
+            bottom: 10,
             left: MediaQuery.of(context).size.width / 2 - 30,
             child: GestureDetector(
               onTap: () {

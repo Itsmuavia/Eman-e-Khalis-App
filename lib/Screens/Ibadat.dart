@@ -32,9 +32,21 @@ class _IbadatState extends State<Ibadat> {
   final List<Map<String, dynamic>> ibadatItems = [
     {"titleEn": "Prayer", "titleUr": "نماز", "icon": FontAwesomeIcons.mosque},
     {"titleEn": "Fasting", "titleUr": "روزہ", "icon": FontAwesomeIcons.moon},
-    {"titleEn": "Hajj / Umrah", "titleUr": "حج / عمرہ", "icon": FontAwesomeIcons.kaaba},
-    {"titleEn": "Namaz-e-Janaza", "titleUr": "نماز جنازہ", "icon": FontAwesomeIcons.pray},
-    {"titleEn": "Zakat", "titleUr": "زکوٰۃ", "icon": FontAwesomeIcons.handHoldingDollar},
+    {
+      "titleEn": "Hajj / Umrah",
+      "titleUr": "حج / عمرہ",
+      "icon": FontAwesomeIcons.kaaba,
+    },
+    {
+      "titleEn": "Namaz-e-Janaza",
+      "titleUr": "نماز جنازہ",
+      "icon": FontAwesomeIcons.pray,
+    },
+    {
+      "titleEn": "Zakat",
+      "titleUr": "زکوٰۃ",
+      "icon": FontAwesomeIcons.handHoldingDollar,
+    },
   ];
 
   @override
@@ -77,18 +89,18 @@ class _IbadatState extends State<Ibadat> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFFe6f0fb), Color(0xFFdff3ff)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue.shade50, Colors.blue.shade100],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(22),
+                    bottomRight: Radius.circular(22),
+                  ),
                 ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(22),
-                  bottomRight: Radius.circular(22),
-                ),
-              ),
               child: Row(
                 children: [
                   Expanded(
@@ -125,20 +137,13 @@ class _IbadatState extends State<Ibadat> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'عِبَادَات',
+                              'Ibadat',
                               style: GoogleFonts.scheherazadeNew(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.blueGrey.shade800,
                               ),
-                              textDirection: TextDirection.rtl,
-                            ),
-                            Text(
-                              'Ibadat',
-                              style: TextStyle(
-                                color: Colors.blueGrey.shade400,
-                                fontSize: 13,
-                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -199,7 +204,6 @@ class _IbadatState extends State<Ibadat> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Banner
                     Container(
                       margin: const EdgeInsets.symmetric(
                         vertical: 14,
@@ -232,18 +236,17 @@ class _IbadatState extends State<Ibadat> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: filteredItems.length,
                         gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 14,
-                          mainAxisSpacing: 14,
-                          childAspectRatio: 1,
-                        ),
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 2,
+                              mainAxisSpacing: 14,
+                              childAspectRatio: 1,
+                            ),
                         itemBuilder: (context, index) {
                           final item = filteredItems[index];
                           return GestureDetector(
                             onTap: () {
                               Widget nextPage;
-
                               switch (item["titleEn"]) {
                                 case "Prayer":
                                   nextPage = LoginPage();

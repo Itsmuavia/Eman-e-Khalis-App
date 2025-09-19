@@ -140,8 +140,8 @@ class _HomepageState extends State<Homepage>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFFe6f0fb), Color(0xFFdff3ff)],
+                gradient:LinearGradient(
+                  colors: [Colors.blue.shade50, Colors.blue.shade100],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -187,20 +187,13 @@ class _HomepageState extends State<Homepage>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'اِيمَان خَالِص',
+                              'Pure Faith',
                               style: GoogleFonts.scheherazadeNew(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.blueGrey.shade800,
                               ),
-                              textDirection: TextDirection.rtl,
-                            ),
-                            Text(
-                              'Pure Faith',
-                              style: TextStyle(
-                                color: Colors.blueGrey.shade400,
-                                fontSize: 12,
-                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),

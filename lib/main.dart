@@ -1,4 +1,5 @@
 import 'package:emane_khalis_app/Screens/Bottomnavbar.dart';
+import 'package:emane_khalis_app/Screens/Homepage.dart';
 import 'package:emane_khalis_app/Screens/Loginpage.dart';
 import 'package:emane_khalis_app/Screens/Splashscreen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const SplashScreen(),
+      home: const Bottomnavbar(),
     );
   }
 }
