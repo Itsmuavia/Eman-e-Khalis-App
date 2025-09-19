@@ -30,17 +30,11 @@ class _IbadatState extends State<Ibadat> {
   Timer? _timer;
 
   final List<Map<String, dynamic>> ibadatItems = [
-    {"titleEn": "Prayer", "titleUr": "نماز", "icon": FontAwesomeIcons.mosque},
-    {"titleEn": "Fasting", "titleUr": "روزہ", "icon": FontAwesomeIcons.moon},
+    {"titleEn": "Prayer", "icon": FontAwesomeIcons.personPraying},
+    {"titleEn": "Fasting",  "icon": FontAwesomeIcons.moon},
     {
       "titleEn": "Hajj / Umrah",
-      "titleUr": "حج / عمرہ",
       "icon": FontAwesomeIcons.kaaba,
-    },
-    {
-      "titleEn": "Namaz-e-Janaza",
-      "titleUr": "نماز جنازہ",
-      "icon": FontAwesomeIcons.pray,
     },
     {
       "titleEn": "Zakat",
@@ -228,7 +222,7 @@ class _IbadatState extends State<Ibadat> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
+                        horizontal: 25,
                         vertical: 10,
                       ),
                       child: GridView.builder(
@@ -239,7 +233,7 @@ class _IbadatState extends State<Ibadat> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                               crossAxisSpacing: 2,
-                              mainAxisSpacing: 14,
+                              mainAxisSpacing: 12,
                               childAspectRatio: 1,
                             ),
                         itemBuilder: (context, index) {
@@ -256,9 +250,6 @@ class _IbadatState extends State<Ibadat> {
                                   break;
                                 case "Hajj / Umrah":
                                   nextPage = Tafseer();
-                                  break;
-                                case "Namaz-e-Janaza":
-                                  nextPage = Bottomnavbar();
                                   break;
                                 case "Zakat":
                                   nextPage = Qna();
@@ -313,7 +304,7 @@ class _IbadatState extends State<Ibadat> {
                                 children: [
                                   FaIcon(
                                     item['icon'] as IconData,
-                                    size: 42,
+                                    size: 52,
                                     color: Colors.black,
                                   ),
                                   const SizedBox(height: 10),
@@ -321,19 +312,10 @@ class _IbadatState extends State<Ibadat> {
                                     item["titleEn"]!,
                                     style: TextStyle(
                                       fontFamily: "Pacifico",
-                                      fontSize: 18,
+                                      fontSize: 25,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.blue.shade900,
+                                      color: Colors.amber,
                                     ),
-                                  ),
-                                  Text(
-                                    item["titleUr"]!,
-                                    style: GoogleFonts.scheherazadeNew(
-                                      fontSize: 30,
-                                      color: Colors.amber.shade900,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textDirection: TextDirection.rtl,
                                   ),
                                 ],
                               ),
