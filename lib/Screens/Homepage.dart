@@ -257,7 +257,6 @@ class _HomepageState extends State<Homepage>
                   children: [
                     const SizedBox(height: 10),
 
-                    // --- Carousel Slider ---
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Container(

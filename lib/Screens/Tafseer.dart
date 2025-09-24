@@ -1,6 +1,7 @@
 import 'package:achievement_view/achievement_view.dart';
 import 'package:achievement_view/achievement_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Tafseer extends StatefulWidget {
@@ -15,8 +16,6 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
   String _searchQuery = '';
   late TabController _tabController;
   late TabController _parahTabController;
-
-
 
   final List<Map<String, String>> surahData = [
     {
@@ -893,36 +892,181 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
     },
   ];
   final List<Map<String, String>> ParahData = [
-    {"number": "1", "name": "Alif Laam Meem", "title": "Verses 148", "arabic": "ٱلم"},
-    {"number": "2", "name": "Sayakool", "title": "Verses 111", "arabic": "سَيَقُولُ"},
-    {"number": "3", "name": "Tilkar Rusul", "title": "Verses 126", "arabic": "تِلْكَ ٱلرُّسُل"},
-    {"number": "4", "name": "Lan Tana Loo", "title": "Verses 131", "arabic": "لَن تَنَالُوا۟"},
-    {"number": "5", "name": "Wal Mohsinaato", "title": "Verses 124", "arabic": "وَٱلْمُحْصَنَـٰتُ"},
-    {"number": "6", "name": "Yaa Ayyuhal Lazeena", "title": "Verses 110", "arabic": "يَـٰٓأَيُّهَا ٱلَّذِينَ"},
-    {"number": "7", "name": "Wa Iza Samiu", "title": "Verses 149", "arabic": "وَإِذَا سَمِعُوا۟"},
-    {"number": "8", "name": "Wa Lau Annana", "title": "Verses 142", "arabic": "وَلَوْ أَنَّنَا"},
-    {"number": "9", "name": "Qad Aflaha", "title": "Verses 159", "arabic": "قَدْ أَفْلَحَ"},
-    {"number": "10", "name": "Wa A'lamu", "title": "Verses 127", "arabic": "وَٱعْلَمُوا۟"},
-    {"number": "11", "name": "Yatazeroon", "title": "Verses 151", "arabic": "يَعْتَذِرُونَ"},
-    {"number": "12", "name": "Wa Mamin Da’abat", "title": "Verses 170", "arabic": "وَمَا مِن دَابَّةٍ"},
-    {"number": "13", "name": "Wa Maaa Ubrioo", "title": "Verses 154", "arabic": "وَمَآ أُبَرِّئُ"},
-    {"number": "14", "name": "Rubama", "title": "Verses 227", "arabic": "رُّبَمَا"},
-    {"number": "15", "name": "Subhanallazi", "title": "Verses 185", "arabic": "سُبْحَـٰنَ ٱلَّذِى"},
-    {"number": "16", "name": "Qal Alam", "title": "Verses 259", "arabic": "قَالَ أَلَمْ"},
-    {"number": "17", "name": "Iqtarabah", "title": "Verses 190", "arabic": "ٱقْتَرَبَتِ"},
-    {"number": "18", "name": "Qadd Aflaha", "title": "Verses 202", "arabic": "قَدْ أَفْلَحَ"},
-    {"number": "19", "name": "Wa Qalallazina", "title": "Verses 339", "arabic": "وَقَالَ ٱلَّذِينَ"},
-    {"number": "20", "name": "A'man Khalaqa", "title": "Verses 171", "arabic": "أَمَّنْ خَلَقَ"},
-    {"number": "21", "name": "Utlu Ma Oohiyaa", "title": "Verses 179", "arabic": "ٱتْلُ مَآ أُوحِىَ"},
-    {"number": "22", "name": "Wa Manyaqnut", "title": "Verses 169", "arabic": "وَمَن يَقْنُتْ"},
-    {"number": "23", "name": "Wa Mali", "title": "Verses 357", "arabic": "وَمَا لِىَ"},
-    {"number": "24", "name": "Faman Azlam", "title": "Verses 175", "arabic": "فَمَنْ أَظْلَمُ"},
-    {"number": "25", "name": "Ilayhi Yuraddu", "title": "Verses 246", "arabic": "إِلَيْهِ يُرَدُّ"},
+    {
+      "number": "1",
+      "name": "Alif Laam Meem",
+      "title": "Verses 148",
+      "arabic": "ٱلم",
+    },
+    {
+      "number": "2",
+      "name": "Sayakool",
+      "title": "Verses 111",
+      "arabic": "سَيَقُولُ",
+    },
+    {
+      "number": "3",
+      "name": "Tilkar Rusul",
+      "title": "Verses 126",
+      "arabic": "تِلْكَ ٱلرُّسُل",
+    },
+    {
+      "number": "4",
+      "name": "Lan Tana Loo",
+      "title": "Verses 131",
+      "arabic": "لَن تَنَالُوا۟",
+    },
+    {
+      "number": "5",
+      "name": "Wal Mohsinaato",
+      "title": "Verses 124",
+      "arabic": "وَٱلْمُحْصَنَـٰتُ",
+    },
+    {
+      "number": "6",
+      "name": "Yaa Ayyuhal Lazeena",
+      "title": "Verses 110",
+      "arabic": "يَـٰٓأَيُّهَا ٱلَّذِينَ",
+    },
+    {
+      "number": "7",
+      "name": "Wa Iza Samiu",
+      "title": "Verses 149",
+      "arabic": "وَإِذَا سَمِعُوا۟",
+    },
+    {
+      "number": "8",
+      "name": "Wa Lau Annana",
+      "title": "Verses 142",
+      "arabic": "وَلَوْ أَنَّنَا",
+    },
+    {
+      "number": "9",
+      "name": "Qad Aflaha",
+      "title": "Verses 159",
+      "arabic": "قَدْ أَفْلَحَ",
+    },
+    {
+      "number": "10",
+      "name": "Wa A'lamu",
+      "title": "Verses 127",
+      "arabic": "وَٱعْلَمُوا۟",
+    },
+    {
+      "number": "11",
+      "name": "Yatazeroon",
+      "title": "Verses 151",
+      "arabic": "يَعْتَذِرُونَ",
+    },
+    {
+      "number": "12",
+      "name": "Wa Mamin Da’abat",
+      "title": "Verses 170",
+      "arabic": "وَمَا مِن دَابَّةٍ",
+    },
+    {
+      "number": "13",
+      "name": "Wa Maaa Ubrioo",
+      "title": "Verses 154",
+      "arabic": "وَمَآ أُبَرِّئُ",
+    },
+    {
+      "number": "14",
+      "name": "Rubama",
+      "title": "Verses 227",
+      "arabic": "رُّبَمَا",
+    },
+    {
+      "number": "15",
+      "name": "Subhanallazi",
+      "title": "Verses 185",
+      "arabic": "سُبْحَـٰنَ ٱلَّذِى",
+    },
+    {
+      "number": "16",
+      "name": "Qal Alam",
+      "title": "Verses 259",
+      "arabic": "قَالَ أَلَمْ",
+    },
+    {
+      "number": "17",
+      "name": "Iqtarabah",
+      "title": "Verses 190",
+      "arabic": "ٱقْتَرَبَتِ",
+    },
+    {
+      "number": "18",
+      "name": "Qadd Aflaha",
+      "title": "Verses 202",
+      "arabic": "قَدْ أَفْلَحَ",
+    },
+    {
+      "number": "19",
+      "name": "Wa Qalallazina",
+      "title": "Verses 339",
+      "arabic": "وَقَالَ ٱلَّذِينَ",
+    },
+    {
+      "number": "20",
+      "name": "A'man Khalaqa",
+      "title": "Verses 171",
+      "arabic": "أَمَّنْ خَلَقَ",
+    },
+    {
+      "number": "21",
+      "name": "Utlu Ma Oohiyaa",
+      "title": "Verses 179",
+      "arabic": "ٱتْلُ مَآ أُوحِىَ",
+    },
+    {
+      "number": "22",
+      "name": "Wa Manyaqnut",
+      "title": "Verses 169",
+      "arabic": "وَمَن يَقْنُتْ",
+    },
+    {
+      "number": "23",
+      "name": "Wa Mali",
+      "title": "Verses 357",
+      "arabic": "وَمَا لِىَ",
+    },
+    {
+      "number": "24",
+      "name": "Faman Azlam",
+      "title": "Verses 175",
+      "arabic": "فَمَنْ أَظْلَمُ",
+    },
+    {
+      "number": "25",
+      "name": "Ilayhi Yuraddu",
+      "title": "Verses 246",
+      "arabic": "إِلَيْهِ يُرَدُّ",
+    },
     {"number": "26", "name": "Ha Meem", "title": "Verses 195", "arabic": "حمٓ"},
-    {"number": "27", "name": "Qala Fama Khatbukum", "title": "Verses 399", "arabic": "قَالَ فَمَا خَطْبُكُمْ"},
-    {"number": "28", "name": "Qadd Sami Allah", "title": "Verses 137", "arabic": "قَدْ سَمِعَ ٱللَّهُ"},
-    {"number": "29", "name": "Tabarakallazi", "title": "Verses 431", "arabic": "تَبَـٰرَكَ ٱلَّذِى"},
-    {"number": "30", "name": "Amma Yatasa'aloon", "title": "Verses 564", "arabic": "عَمَّ يَتَسَآءَلُونَ"},
+    {
+      "number": "27",
+      "name": "Qala Fama Khatbukum",
+      "title": "Verses 399",
+      "arabic": "قَالَ فَمَا خَطْبُكُمْ",
+    },
+    {
+      "number": "28",
+      "name": "Qadd Sami Allah",
+      "title": "Verses 137",
+      "arabic": "قَدْ سَمِعَ ٱللَّهُ",
+    },
+    {
+      "number": "29",
+      "name": "Tabarakallazi",
+      "title": "Verses 431",
+      "arabic": "تَبَـٰرَكَ ٱلَّذِى",
+    },
+    {
+      "number": "30",
+      "name": "Amma Yatasa'aloon",
+      "title": "Verses 564",
+      "arabic": "عَمَّ يَتَسَآءَلُونَ",
+    },
   ];
 
   @override
@@ -950,8 +1094,6 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
     _searchController.dispose();
     super.dispose();
   }
-
-
 
   void _showJumpDialog(BuildContext context) {
     if (surahData.isEmpty) return;
@@ -995,7 +1137,7 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
                       setState(() {
                         selectedSurah = value;
                         selectedIndex = surahData.indexWhere(
-                              (s) => s["name"] == value,
+                          (s) => s["name"] == value,
                         );
                         if (selectedIndex < 0) selectedIndex = 0;
                       });
@@ -1043,7 +1185,7 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
                         subTitle: "Please enter a valid ayat number",
                         icon: const Icon(Icons.error, color: Colors.white),
                         typeAnimationContent:
-                        AnimationTypeAchievement.fadeSlideToLeft,
+                            AnimationTypeAchievement.fadeSlideToLeft,
                         alignment: Alignment.topCenter,
                         duration: const Duration(seconds: 3),
                         isCircle: true,
@@ -1062,7 +1204,6 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
       },
     );
   }
-
 
   Widget _buildSurahListItem(Map<String, String> surah, bool isSmallScreen) {
     return Card(
@@ -1170,7 +1311,7 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
-          " ${parah ["title"] ?? ''}",
+          " ${parah["title"] ?? ''}",
           style: TextStyle(
             fontSize: isSmallScreen ? 13 : 12,
             color: Colors.blueGrey.shade400,
@@ -1313,8 +1454,8 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
                   IconButton(
                     icon: Container(
                       child: Icon(
-                        Icons.filter_list_sharp,
-                        size: 30,
+                        FontAwesomeIcons.listCheck,
+                        size: 25,
                         color: Colors.blue.shade900,
                       ),
                     ),
@@ -1337,7 +1478,7 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
                 Tab(icon: Icon(Icons.bookmark), text: "Bookmarks"),
               ],
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 10),
 
             if (_tabController.index == 0)
               Container(
@@ -1363,19 +1504,13 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
                   indicatorPadding: EdgeInsets.zero,
                   splashBorderRadius: BorderRadius.circular(12),
                   tabs: const [
-                    Tab(
-                      text: "By Surah",
-                    ),
-                    Tab(
-                      text: "By Parah",
-                    ),
-                    Tab(
-                      text: "Favourites",
-                    ),
+                    Tab(text: "By Surah"),
+                    Tab(text: "By Parah"),
+                    Tab(text: "Favourites"),
                   ],
                 ),
               ),
-            SizedBox(height: 10,),
+            SizedBox(height: 10),
 
             Expanded(
               child: TabBarView(
@@ -1386,69 +1521,69 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
                   filteredJuz.isEmpty
                       ? const Center(child: Text("No Juz found"))
                       : ListView.builder(
-                    itemCount: filteredJuz.length,
-                    itemBuilder: (context, index) {
-                      final juz = filteredJuz[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 6,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 2,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.blue.shade700,
-                            child: Text(
-                              juz["number"] ?? '',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
+                          itemCount: filteredJuz.length,
+                          itemBuilder: (context, index) {
+                            final juz = filteredJuz[index];
+                            return Card(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 6,
                               ),
-                            ),
-                          ),
-                          title: Text(juz["name"] ?? ''),
-                          subtitle: Text(
-                            juz["title"] ?? '',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          trailing: Wrap(
-                            spacing: 6,
-                            children: [
-                              Text(
-                                juz["arabic"] ?? '',
-                                style: GoogleFonts.lateef(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue.shade900,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 2,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.blue.shade700,
+                                  child: Text(
+                                    juz["number"] ?? '',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                title: Text(juz["name"] ?? ''),
+                                subtitle: Text(
+                                  juz["title"] ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                trailing: Wrap(
+                                  spacing: 6,
+                                  children: [
+                                    Text(
+                                      juz["arabic"] ?? '',
+                                      style: GoogleFonts.lateef(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue.shade900,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.bookmark_outline,
+                                        color: Colors.red.shade400,
+                                      ),
+                                      onPressed: () {},
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.open_in_new,
+                                        color: Colors.amber.shade700,
+                                      ),
+                                      onPressed: () {},
+                                    ),
+                                  ],
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.bookmark_outline,
-                                  color: Colors.red.shade400,
-                                ),
-                                onPressed: () {},
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.open_in_new,
-                                  color: Colors.amber.shade700,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
 
                   // Bookmarks Tab
                   const Center(
@@ -1459,7 +1594,10 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
                         SizedBox(height: 16),
                         Text(
                           "Your bookmarks will appear here",
-                          style: TextStyle(fontSize: 16, color: Colors.blueGrey),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.blueGrey,
+                          ),
                         ),
                       ],
                     ),
@@ -1475,51 +1613,51 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
 
   // Build Quran Tab Content with inner TabBarView - OPTIMIZED
   Widget _buildQuranTabContent(
-      List<Map<String, String>> filteredSurah,
-      List<Map<String, String>> filteredParah,
-      ) {
+    List<Map<String, String>> filteredSurah,
+    List<Map<String, String>> filteredParah,
+  ) {
     return TabBarView(
       controller: _parahTabController,
       children: [
         // By Surah Content
         filteredSurah.isEmpty
             ? const Center(
-          child: Text(
-            "No Surah available",
-            style: TextStyle(
-              color: Colors.blueGrey,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        )
+                child: Text(
+                  "No Surah available",
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              )
             : ListView.builder(
-          itemCount: filteredSurah.length,
-          itemBuilder: (context, index) {
-            final surah = filteredSurah[index];
-            return _buildSurahListItem(surah, false);
-          },
-        ),
+                itemCount: filteredSurah.length,
+                itemBuilder: (context, index) {
+                  final surah = filteredSurah[index];
+                  return _buildSurahListItem(surah, false);
+                },
+              ),
 
         // By Parah Content - NOW WITH BLUE THEME
         filteredParah.isEmpty
             ? const Center(
-          child: Text(
-            "No Parah available",
-            style: TextStyle(
-              color: Colors.blueGrey,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        )
+                child: Text(
+                  "No Parah available",
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              )
             : ListView.builder(
-          itemCount: filteredParah.length,
-          itemBuilder: (context, index) {
-            final parah = filteredParah[index];
-            return _buildParahListItemNew(parah, false);
-          },
-        ),
+                itemCount: filteredParah.length,
+                itemBuilder: (context, index) {
+                  final parah = filteredParah[index];
+                  return _buildParahListItemNew(parah, false);
+                },
+              ),
 
         // Favourites Content
         const Center(

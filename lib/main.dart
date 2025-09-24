@@ -1,6 +1,7 @@
 import 'package:emane_khalis_app/Screens/Bottomnavbar.dart';
 import 'package:emane_khalis_app/Screens/Homepage.dart';
 import 'package:emane_khalis_app/Screens/Loginpage.dart';
+import 'package:emane_khalis_app/Screens/Prayerpage.dart';
 import 'package:emane_khalis_app/Screens/Splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
