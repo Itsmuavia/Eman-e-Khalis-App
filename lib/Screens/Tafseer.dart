@@ -10,10 +10,13 @@ class Tafseer extends StatefulWidget {
   State<Tafseer> createState() => _TafseerState();
 }
 
-class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
+class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   late TabController _tabController;
+  late TabController _parahTabController;
+
+
 
   final List<Map<String, String>> surahData = [
     {
@@ -889,11 +892,50 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
       "arabic": "ٱلْأَنْعَامُ",
     },
   ];
+  final List<Map<String, String>> ParahData = [
+    {"number": "1", "name": "Alif Laam Meem", "title": "Verses 148", "arabic": "ٱلم"},
+    {"number": "2", "name": "Sayakool", "title": "Verses 111", "arabic": "سَيَقُولُ"},
+    {"number": "3", "name": "Tilkar Rusul", "title": "Verses 126", "arabic": "تِلْكَ ٱلرُّسُل"},
+    {"number": "4", "name": "Lan Tana Loo", "title": "Verses 131", "arabic": "لَن تَنَالُوا۟"},
+    {"number": "5", "name": "Wal Mohsinaato", "title": "Verses 124", "arabic": "وَٱلْمُحْصَنَـٰتُ"},
+    {"number": "6", "name": "Yaa Ayyuhal Lazeena", "title": "Verses 110", "arabic": "يَـٰٓأَيُّهَا ٱلَّذِينَ"},
+    {"number": "7", "name": "Wa Iza Samiu", "title": "Verses 149", "arabic": "وَإِذَا سَمِعُوا۟"},
+    {"number": "8", "name": "Wa Lau Annana", "title": "Verses 142", "arabic": "وَلَوْ أَنَّنَا"},
+    {"number": "9", "name": "Qad Aflaha", "title": "Verses 159", "arabic": "قَدْ أَفْلَحَ"},
+    {"number": "10", "name": "Wa A'lamu", "title": "Verses 127", "arabic": "وَٱعْلَمُوا۟"},
+    {"number": "11", "name": "Yatazeroon", "title": "Verses 151", "arabic": "يَعْتَذِرُونَ"},
+    {"number": "12", "name": "Wa Mamin Da’abat", "title": "Verses 170", "arabic": "وَمَا مِن دَابَّةٍ"},
+    {"number": "13", "name": "Wa Maaa Ubrioo", "title": "Verses 154", "arabic": "وَمَآ أُبَرِّئُ"},
+    {"number": "14", "name": "Rubama", "title": "Verses 227", "arabic": "رُّبَمَا"},
+    {"number": "15", "name": "Subhanallazi", "title": "Verses 185", "arabic": "سُبْحَـٰنَ ٱلَّذِى"},
+    {"number": "16", "name": "Qal Alam", "title": "Verses 259", "arabic": "قَالَ أَلَمْ"},
+    {"number": "17", "name": "Iqtarabah", "title": "Verses 190", "arabic": "ٱقْتَرَبَتِ"},
+    {"number": "18", "name": "Qadd Aflaha", "title": "Verses 202", "arabic": "قَدْ أَفْلَحَ"},
+    {"number": "19", "name": "Wa Qalallazina", "title": "Verses 339", "arabic": "وَقَالَ ٱلَّذِينَ"},
+    {"number": "20", "name": "A'man Khalaqa", "title": "Verses 171", "arabic": "أَمَّنْ خَلَقَ"},
+    {"number": "21", "name": "Utlu Ma Oohiyaa", "title": "Verses 179", "arabic": "ٱتْلُ مَآ أُوحِىَ"},
+    {"number": "22", "name": "Wa Manyaqnut", "title": "Verses 169", "arabic": "وَمَن يَقْنُتْ"},
+    {"number": "23", "name": "Wa Mali", "title": "Verses 357", "arabic": "وَمَا لِىَ"},
+    {"number": "24", "name": "Faman Azlam", "title": "Verses 175", "arabic": "فَمَنْ أَظْلَمُ"},
+    {"number": "25", "name": "Ilayhi Yuraddu", "title": "Verses 246", "arabic": "إِلَيْهِ يُرَدُّ"},
+    {"number": "26", "name": "Ha Meem", "title": "Verses 195", "arabic": "حمٓ"},
+    {"number": "27", "name": "Qala Fama Khatbukum", "title": "Verses 399", "arabic": "قَالَ فَمَا خَطْبُكُمْ"},
+    {"number": "28", "name": "Qadd Sami Allah", "title": "Verses 137", "arabic": "قَدْ سَمِعَ ٱللَّهُ"},
+    {"number": "29", "name": "Tabarakallazi", "title": "Verses 431", "arabic": "تَبَـٰرَكَ ٱلَّذِى"},
+    {"number": "30", "name": "Amma Yatasa'aloon", "title": "Verses 564", "arabic": "عَمَّ يَتَسَآءَلُونَ"},
+  ];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _parahTabController = TabController(length: 3, vsync: this);
+
+    // صرف tab change پر rebuild کے لئے listener
+    _tabController.addListener(() {
+      setState(() {});
+    });
+
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text.trim().toLowerCase();
@@ -904,12 +946,16 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _tabController.dispose();
+    _parahTabController.dispose();
     _searchController.dispose();
     super.dispose();
   }
 
-  // 🔹 Show Dialog to Jump to Surah and Verse
+
+
   void _showJumpDialog(BuildContext context) {
+    if (surahData.isEmpty) return;
+
     String selectedSurah = surahData[0]["name"]!;
     int selectedIndex = 0;
     final TextEditingController verseController = TextEditingController();
@@ -920,7 +966,7 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
         return StatefulBuilder(
           builder: (context, setState) {
             int totalVerses =
-                int.tryParse(surahData[selectedIndex]["verses"]!) ?? 1;
+                int.tryParse(surahData[selectedIndex]["verses"] ?? '1') ?? 1;
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -945,11 +991,13 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
                       );
                     }).toList(),
                     onChanged: (value) {
+                      if (value == null) return;
                       setState(() {
-                        selectedSurah = value!;
+                        selectedSurah = value;
                         selectedIndex = surahData.indexWhere(
-                          (s) => s["name"] == value,
+                              (s) => s["name"] == value,
                         );
+                        if (selectedIndex < 0) selectedIndex = 0;
                       });
                     },
                   ),
@@ -993,11 +1041,11 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
                         color: Colors.red,
                         title: "Enter a Valid ayat number",
                         subTitle: "Please enter a valid ayat number",
-                        icon: Icon(Icons.error, color: Colors.white),
+                        icon: const Icon(Icons.error, color: Colors.white),
                         typeAnimationContent:
-                            AnimationTypeAchievement.fadeSlideToLeft,
+                        AnimationTypeAchievement.fadeSlideToLeft,
                         alignment: Alignment.topCenter,
-                        duration: Duration(seconds: 3),
+                        duration: const Duration(seconds: 3),
                         isCircle: true,
                       ).show(context);
                     }
@@ -1015,22 +1063,186 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
     );
   }
 
+
+  Widget _buildSurahListItem(Map<String, String> surah, bool isSmallScreen) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Colors.blue.shade800,
+          child: Text(
+            surah["number"] ?? '',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: isSmallScreen ? 11 : 13,
+            ),
+          ),
+        ),
+        title: Text(
+          surah["name"] ?? '',
+          style: TextStyle(
+            fontSize: isSmallScreen ? 13 : 15,
+            fontWeight: FontWeight.bold,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          "${surah["place"] ?? ''} \n Verses ${surah["verses"] ?? ''}",
+          style: TextStyle(
+            fontSize: isSmallScreen ? 13 : 12,
+            color: Colors.blueGrey.shade400,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Wrap(
+          spacing: isSmallScreen ? 4 : 6,
+          children: [
+            Text(
+              surah["arabic"] ?? '',
+              style: GoogleFonts.lateef(
+                fontSize: isSmallScreen ? 17 : 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue.shade900,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.favorite_outline,
+                    color: Colors.red.shade700,
+                    size: isSmallScreen ? 20 : 24,
+                  ),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.play_circle,
+                    color: Colors.green.shade700,
+                    size: isSmallScreen ? 20 : 24,
+                  ),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.open_in_new,
+                    color: Colors.amber.shade700,
+                    size: isSmallScreen ? 20 : 24,
+                  ),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildParahListItemNew(Map<String, String> parah, bool isSmallScreen) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Colors.blue.shade800,
+          child: Text(
+            parah["number"] ?? '',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: isSmallScreen ? 11 : 13,
+            ),
+          ),
+        ),
+        title: Text(
+          parah["name"] ?? '',
+          style: TextStyle(
+            fontSize: isSmallScreen ? 13 : 15,
+            fontWeight: FontWeight.bold,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          " ${parah ["title"] ?? ''}",
+          style: TextStyle(
+            fontSize: isSmallScreen ? 13 : 12,
+            color: Colors.blueGrey.shade400,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Wrap(
+          spacing: isSmallScreen ? 4 : 6,
+          children: [
+            Text(
+              parah["arabic"] ?? '',
+              style: GoogleFonts.lateef(
+                fontSize: isSmallScreen ? 13 : 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue.shade900,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.play_circle,
+                    color: Colors.green.shade700,
+                    size: isSmallScreen ? 20 : 24,
+                  ),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.open_in_new,
+                    color: Colors.amber.shade700,
+                    size: isSmallScreen ? 20 : 24,
+                  ),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final filteredSurah = surahData.where((surah) {
-      final number = surah["number"]!;
-      final name = surah["name"]!.toLowerCase();
-      final arabic = surah["arabic"]!;
+      final number = surah["number"] ?? '';
+      final name = (surah["name"] ?? '').toLowerCase();
+      final arabic = surah["arabic"] ?? '';
       return name.contains(_searchQuery) ||
           arabic.contains(_searchQuery) ||
           number.contains(_searchQuery);
     }).toList();
 
     final filteredJuz = JuzData.where((juz) {
-      final number = juz["number"]!;
-      final name = juz["name"]!.toLowerCase();
-      final title = juz["title"]!.toLowerCase();
-      final arabic = juz["arabic"]!;
+      final number = juz["number"] ?? '';
+      final name = (juz["name"] ?? '').toLowerCase();
+      final title = (juz["title"] ?? '').toLowerCase();
+      final arabic = juz["arabic"] ?? '';
+      return name.contains(_searchQuery) ||
+          arabic.contains(_searchQuery) ||
+          number.contains(_searchQuery) ||
+          title.contains(_searchQuery);
+    }).toList();
+
+    final filteredParah = ParahData.where((parah) {
+      final number = parah["number"] ?? '';
+      final name = (parah["name"] ?? '').toLowerCase();
+      final title = (parah["title"] ?? '').toLowerCase();
+      final arabic = parah["arabic"] ?? '';
       return name.contains(_searchQuery) ||
           arabic.contains(_searchQuery) ||
           number.contains(_searchQuery) ||
@@ -1040,349 +1252,291 @@ class _TafseerState extends State<Tafseer> with SingleTickerProviderStateMixin {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F9FF),
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isSmallScreen = constraints.maxWidth < 400;
-            final isTablet = constraints.maxWidth > 600;
-            return Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.blue.shade50, Colors.blue.shade100],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(22),
-                      bottomRight: Radius.circular(22),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.blue.shade700,
-                                    Colors.blue.shade400,
-                                  ],
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'تَفْسِير',
-                                  style: GoogleFonts.scheherazadeNew(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textDirection: TextDirection.rtl,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "Quran Tafseer",
-                              style: GoogleFonts.scheherazadeNew(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueGrey.shade800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Expanded(
-                        child: Container(
-                          height: 40,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          children: [
+            // Header Section
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blue.shade50, Colors.blue.shade100],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(22),
+                  bottomRight: Radius.circular(22),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.blue.shade100),
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.blue.shade700,
+                                Colors.blue.shade400,
+                              ],
+                            ),
                           ),
-                          child: Row(
+                          child: Center(
+                            child: Text(
+                              'تَفْسِير',
+                              style: GoogleFonts.scheherazadeNew(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textDirection: TextDirection.rtl,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Quran Tafseer",
+                          style: GoogleFonts.scheherazadeNew(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueGrey.shade800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  IconButton(
+                    icon: Container(
+                      child: Icon(
+                        Icons.filter_list_sharp,
+                        size: 30,
+                        color: Colors.blue.shade900,
+                      ),
+                    ),
+                    onPressed: () => _showJumpDialog(context),
+                  ),
+                ],
+              ),
+            ),
+
+            TabBar(
+              controller: _tabController,
+              labelColor: Colors.blue.shade800,
+              unselectedLabelColor: Colors.blueGrey,
+              indicator: const UnderlineTabIndicator(
+                borderSide: BorderSide(width: 2, color: Colors.amber),
+              ),
+              tabs: const [
+                Tab(icon: Icon(Icons.book), text: "Quran"),
+                Tab(icon: Icon(Icons.layers), text: "Juz"),
+                Tab(icon: Icon(Icons.bookmark), text: "Bookmarks"),
+              ],
+            ),
+            SizedBox(height: 10,),
+
+            if (_tabController.index == 0)
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 40),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TabBar(
+                  controller: _parahTabController,
+                  labelColor: Colors.blue.shade800,
+                  unselectedLabelColor: Colors.blueGrey,
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      width: 3,
+                      color: Colors.yellowAccent.shade200,
+                    ),
+                    insets: const EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                  isScrollable: false,
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  indicatorPadding: EdgeInsets.zero,
+                  splashBorderRadius: BorderRadius.circular(12),
+                  tabs: const [
+                    Tab(
+                      text: "By Surah",
+                    ),
+                    Tab(
+                      text: "By Parah",
+                    ),
+                    Tab(
+                      text: "Favourites",
+                    ),
+                  ],
+                ),
+              ),
+            SizedBox(height: 10,),
+
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildQuranTabContent(filteredSurah, filteredParah),
+
+                  filteredJuz.isEmpty
+                      ? const Center(child: Text("No Juz found"))
+                      : ListView.builder(
+                    itemCount: filteredJuz.length,
+                    itemBuilder: (context, index) {
+                      final juz = filteredJuz[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 2,
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.blue.shade700,
+                            child: Text(
+                              juz["number"] ?? '',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          title: Text(juz["name"] ?? ''),
+                          subtitle: Text(
+                            juz["title"] ?? '',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: Wrap(
+                            spacing: 6,
                             children: [
-                              const Icon(Icons.search, color: Colors.blueGrey),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                child: TextField(
-                                  controller: _searchController,
-                                  decoration: const InputDecoration(
-                                    isDense: true,
-                                    hintText: 'Search Surah...',
-                                    border: InputBorder.none,
-                                  ),
-                                  style: const TextStyle(fontSize: 14),
-                                  textInputAction: TextInputAction.search,
+                              Text(
+                                juz["arabic"] ?? '',
+                                style: GoogleFonts.lateef(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue.shade900,
                                 ),
                               ),
-                              if (_searchQuery.isNotEmpty)
-                                GestureDetector(
-                                  onTap: () {
-                                    _searchController.clear();
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                  child: const Icon(
-                                    Icons.clear,
-                                    size: 18,
-                                    color: Colors.blueGrey,
-                                  ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.bookmark_outline,
+                                  color: Colors.red.shade400,
                                 ),
+                                onPressed: () {},
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.open_in_new,
+                                  color: Colors.amber.shade700,
+                                ),
+                                onPressed: () {},
+                              ),
                             ],
                           ),
                         ),
-                      ),
-
-                      // const SizedBox(width: 5),
-                      // IconButton(
-                      //   icon: const Icon(
-                      //     Icons.filter_alt_rounded,
-                      //     size: 25,
-                      //     color: Colors.blueGrey,
-                      //   ),
-                      //   onPressed: () => _showJumpDialog(context),
-                      // ),
-                    ],
+                      );
+                    },
                   ),
-                ),
 
-                // 🔹 Tabs
-                TabBar(
-                  controller: _tabController,
-                  labelColor: Colors.blue.shade800,
-                  unselectedLabelColor: Colors.blueGrey,
-                  indicator: const UnderlineTabIndicator(
-                    borderSide: BorderSide(width: 3, color: Colors.amber),
-                  ),
-                  tabs: const [
-                    Tab(icon: Icon(Icons.menu_book), text: "Surah"),
-                    Tab(icon: Icon(Icons.layers), text: "Juz"),
-                    Tab(icon: Icon(Icons.bookmark), text: "Bookmarks"),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Filtered Surahs",
-                        style: GoogleFonts.pacifico(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.blueGrey.shade800,
+                  // Bookmarks Tab
+                  const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.bookmark, size: 64, color: Colors.blue),
+                        SizedBox(height: 16),
+                        Text(
+                          "Your bookmarks will appear here",
+                          style: TextStyle(fontSize: 16, color: Colors.blueGrey),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.filter_alt_rounded,
-                          color: Colors.blueAccent,
-                          size: 28,
-                        ),
-                        onPressed: () => _showJumpDialog(context),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      // Surah List
-                      filteredSurah.isEmpty
-                          ? Center(
-                              child: Text(
-                                _searchQuery.isNotEmpty
-                                    ? "Not Found"
-                                    : "No Surah available",
-                                style: TextStyle(
-                                  color: Colors.blueGrey.shade400,
-                                  fontSize: isSmallScreen ? 13 : 15,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            )
-                          : ListView.builder(
-                              itemCount: filteredSurah.length,
-                              itemBuilder: (context, index) {
-                                final surah = filteredSurah[index];
-                                return Card(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 6,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  elevation: 2,
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor: Colors.blue.shade800,
-                                      child: Text(
-                                        surah["number"]!,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: isSmallScreen ? 11 : 13,
-                                        ),
-                                      ),
-                                    ),
-                                    title: Text(
-                                      surah["name"]!,
-                                      style: TextStyle(
-                                        fontSize: isSmallScreen ? 13 : 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    subtitle: Text(
-                                      "${surah["place"]} | ${surah["verses"]}",
-                                      style: TextStyle(
-                                        fontSize: isSmallScreen ? 11 : 12,
-                                        color: Colors.blueGrey.shade400,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    trailing: Wrap(
-                                      spacing: isSmallScreen ? 4 : 6,
-                                      children: [
-                                        Text(
-                                          surah["arabic"]!,
-                                          style: GoogleFonts.lateef(
-                                            fontSize: isSmallScreen ? 17 : 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue.shade900,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          // icons tight ho jayenge
-                                          children: [
-                                            IconButton(
-                                              icon: Icon(
-                                                Icons.download,
-                                                color: Colors.blue.shade700,
-                                                size: isSmallScreen ? 20 : 24,
-                                              ),
-                                              onPressed: () {},
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                Icons.play_circle,
-                                                color: Colors.green.shade700,
-                                                size: isSmallScreen ? 20 : 24,
-                                              ),
-                                              onPressed: () {},
-                                            ),
-                                            IconButton(
-                                              icon: Icon(
-                                                Icons.open_in_new,
-                                                color: Colors.amber.shade700,
-                                                size: isSmallScreen ? 20 : 24,
-                                              ),
-                                              onPressed: () {},
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-
-                      filteredJuz.isEmpty
-                          ? const Center(child: Text("No Juz found"))
-                          : ListView.builder(
-                              itemCount: filteredJuz.length,
-                              itemBuilder: (context, index) {
-                                final juz = filteredJuz[index];
-                                return Card(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 6,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  elevation: 2,
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor: Colors.blue.shade700,
-                                      child: Text(
-                                        juz["number"]!,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    title: Text(juz["name"]!),
-                                    subtitle: Text(
-                                      juz["title"]!,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    trailing: Wrap(
-                                      spacing: 6,
-                                      children: [
-                                        Text(
-                                          juz["arabic"]!,
-                                          style: GoogleFonts.lateef(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue.shade900,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.bookmark_outline,
-                                            color: Colors.red.shade400,
-                                          ),
-                                          onPressed: () {},
-                                        ),
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.open_in_new,
-                                            color: Colors.amber.shade700,
-                                          ),
-                                          onPressed: () {},
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-
-                      // 🔸 Bookmarks Tab
-                      const Center(child: Text("Bookmarks will appear here")),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
+                ],
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  // Build Quran Tab Content with inner TabBarView - OPTIMIZED
+  Widget _buildQuranTabContent(
+      List<Map<String, String>> filteredSurah,
+      List<Map<String, String>> filteredParah,
+      ) {
+    return TabBarView(
+      controller: _parahTabController,
+      children: [
+        // By Surah Content
+        filteredSurah.isEmpty
+            ? const Center(
+          child: Text(
+            "No Surah available",
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        )
+            : ListView.builder(
+          itemCount: filteredSurah.length,
+          itemBuilder: (context, index) {
+            final surah = filteredSurah[index];
+            return _buildSurahListItem(surah, false);
+          },
+        ),
+
+        // By Parah Content - NOW WITH BLUE THEME
+        filteredParah.isEmpty
+            ? const Center(
+          child: Text(
+            "No Parah available",
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        )
+            : ListView.builder(
+          itemCount: filteredParah.length,
+          itemBuilder: (context, index) {
+            final parah = filteredParah[index];
+            return _buildParahListItemNew(parah, false);
+          },
+        ),
+
+        // Favourites Content
+        const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.favorite, size: 64, color: Colors.red),
+              SizedBox(height: 16),
+              Text(
+                "Your favourite surahs will appear here",
+                style: TextStyle(fontSize: 16, color: Colors.blueGrey),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

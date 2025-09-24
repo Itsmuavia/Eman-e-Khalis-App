@@ -8,6 +8,7 @@ import 'package:emane_khalis_app/Screens/Tafseer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Ibadat extends StatefulWidget {
   const Ibadat({super.key});
@@ -38,8 +39,12 @@ class _IbadatState extends State<Ibadat> {
     },
     {
       "titleEn": "Zakat",
-      "titleUr": "زکوٰۃ",
       "icon": FontAwesomeIcons.handHoldingDollar,
+    },
+    {
+      "titleEn": "Hadith",
+      "icon": MdiIcons.bookOpenPageVariant
+      // "icon": FontAwesomeIcons.bookQuran,
     },
   ];
 
