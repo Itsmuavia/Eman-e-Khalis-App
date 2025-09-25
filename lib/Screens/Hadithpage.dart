@@ -1,42 +1,42 @@
-import 'dart:async';
-import 'package:emane_khalis_app/Screens/Fastingpage.dart';
-import 'package:emane_khalis_app/Screens/Hadithpage.dart';
-import 'package:emane_khalis_app/Screens/Hajjumrahpage.dart';
-import 'package:emane_khalis_app/Screens/Prayerpage.dart';
-import 'package:emane_khalis_app/Screens/QnA.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class Ibadat extends StatefulWidget {
-  const Ibadat({super.key});
+import 'Fastingpage.dart';
+import 'Hajjumrahpage.dart';
+import 'Prayerpage.dart';
+import 'QnA.dart';
+
+class Hadithpage extends StatefulWidget {
+  const Hadithpage({super.key});
 
   @override
-  State<Ibadat> createState() => _IbadatState();
+  State<Hadithpage> createState() => _HadithpageState();
 }
 
-class _IbadatState extends State<Ibadat> {
+class _HadithpageState extends State<Hadithpage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-  final List<String> bannerImages = [
-    "assets/images/thumbnail1.png",
-    "assets/images/thumbnail2.png",
-    "assets/images/thumbnail3.png",
-  ];
-
   int _currentIndex = 0;
-  Timer? _timer;
 
   final List<Map<String, dynamic>> ibadatItems = [
-    {"titleEn": "Prayer", "icon": FontAwesomeIcons.personPraying},
-    {"titleEn": "Fasting", "icon": FontAwesomeIcons.moon},
-    {"titleEn": "Hajj / Umrah", "icon": FontAwesomeIcons.kaaba},
-    {"titleEn": "Zakat", "icon": FontAwesomeIcons.handHoldingDollar},
+    {"titleEn": "Al-Bukhari", "icon": FontAwesomeIcons.book},
+    {"titleEn": "Al-Muslim", "icon": FontAwesomeIcons.bookAtlas},
+    {"titleEn": "Al-Tirmazi", "icon": FontAwesomeIcons.bookQuran},
+    {"titleEn": "Abu Dawood", "icon": FontAwesomeIcons.bookOpen},
     {
-      "titleEn": "Hadith",
+      "titleEn": "Al-Nasai",
+      "icon": MdiIcons.bookOpenBlankVariant,
+      // "icon": FontAwesomeIcons.bookQuran,
+    },{
+      "titleEn": "Sunane Ibn-e-Maja",
       "icon": MdiIcons.bookOpenPageVariant,
+      // "icon": FontAwesomeIcons.bookQuran,
+    },{
+      "titleEn": "Al-Nasai",
+      "icon": MdiIcons.bookLockOpen,
       // "icon": FontAwesomeIcons.bookQuran,
     },
   ];
@@ -49,17 +49,10 @@ class _IbadatState extends State<Ibadat> {
         _searchQuery = _searchController.text.trim().toLowerCase();
       });
     });
-
-    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % bannerImages.length;
-      });
-    });
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -196,28 +189,6 @@ class _IbadatState extends State<Ibadat> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 14,
-                        horizontal: 16,
-                      ),
-                      height: 190,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(18),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(seconds: 1),
-                          child: Image.asset(
-                            bannerImages[_currentIndex],
-                            key: ValueKey<String>(bannerImages[_currentIndex]),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 25,

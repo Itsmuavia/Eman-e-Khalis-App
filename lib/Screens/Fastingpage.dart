@@ -1,60 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Prayerpage extends StatefulWidget {
-  const Prayerpage({super.key});
+class Fastingpage extends StatefulWidget {
+  const Fastingpage({super.key});
 
   @override
-  State<Prayerpage> createState() => _PrayerpageState();
+  State<Fastingpage> createState() => _FastingpageState();
 }
 
-class _PrayerpageState extends State<Prayerpage> {
+class _FastingpageState extends State<Fastingpage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
   final List<Map<String, dynamic>> prayerList = [
     {
       "number": "1",
-      "title": "تکبیر تحریمہ",
-      "subtitle": "نماز کی ابتدا",
-      "english": "Takbeer Tahreema",
+      "title": "روزہ افطار کرتے وقت کی دعائیں",
+      "subtitle": "روزہ افطار کی ابتدا",
+      "english": "Starting  of Fasting",
     },
     {
       "number": "2",
-      "title": "تکبیر تحریمہ کے بعد کی دعائیں",
-      "subtitle": "کھڑے ہونے کی حالت",
-      "english": "Prayers after Takbeer",
+      "title": "روزہ افطار کرنے کے بعد کی دعائیں",
+      "subtitle": "روزہ افطار کا اختتاپ",
+      "english": "Ending of Fasting",
     },
     {
       "number": "3",
-      "title": "رُکوع کی دعائیں",
-      "subtitle": "جھکنے کی حالت",
-      "english": "Ruku Prayers",
+      "title": " افطاری کرنے والے کی لۓ دعا",
+      "subtitle": "افطار کے لمحے کی مسنون دعا",
+      "english": "Dua for the One Who Gives Iftar",
     },
-    {
-      "number": "4",
-      "title": "رُکوع سے اٹھنے کی دعائیں",
-      "subtitle": "رُکوع اور سجدے کے بیج میں",
-      "english": "Prayers after Ruku",
-    },
-    {
-      "number": "5",
-      "title": "سجدے کی دعائیں",
-      "subtitle": "سجدے کی حالت",
-      "english": "Sajda Prayers",
-    },
-    {
-      "number": "6",
-      "title": "دو سجدے کے درمیان کی دعائیں",
-      "subtitle": "سجدے اور بیٹھنے کے درمیان کی دعائیں",
-      "english": "Prayers between Sajdas",
-    },
-    {
-      "number": "7",
-      "title": "تشہد اور درودُ وسلام",
-      "subtitle": "سلام کے بعد کی دعائیں",
-      "english": "Tashahhud and Salutations",
-    },
+
   ];
 
   @override
@@ -125,7 +102,7 @@ class _PrayerpageState extends State<Prayerpage> {
                           ),
                           child: Center(
                             child: Text(
-                              'صَلاۃ',
+                              'صؐوم',
                               style: GoogleFonts.scheherazadeNew(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -141,7 +118,7 @@ class _PrayerpageState extends State<Prayerpage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Prayer',
+                              "Fasting",
                               style: GoogleFonts.scheherazadeNew(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -204,36 +181,36 @@ class _PrayerpageState extends State<Prayerpage> {
               ),
             ),
             Expanded(
-            child: filteredPrayers.isEmpty
-                ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.search_off,
-                      size: 55, color: Colors.green.shade200),
-                  const SizedBox(height: 16),
-                  Text(
-                    _searchQuery.isNotEmpty
-                        ? "No prayers found for '$_searchQuery'"
-                        : "No prayers available",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.green.shade800,
+              child: filteredPrayers.isEmpty
+                  ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.search_off,
+                        size: 55, color: Colors.green.shade200),
+                    const SizedBox(height: 16),
+                    Text(
+                      _searchQuery.isNotEmpty
+                          ? "No fasting found for '$_searchQuery'"
+                          : "Not available",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.green.shade800,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              )
+                  : ListView.builder(
+                itemCount: filteredPrayers.length,
+                itemBuilder: (context, index) {
+                  return _buildPrayerCard(filteredPrayers[index]);
+                },
               ),
-            )
-                : ListView.builder(
-              itemCount: filteredPrayers.length,
-              itemBuilder: (context, index) {
-                return _buildPrayerCard(filteredPrayers[index]);
-              },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 
