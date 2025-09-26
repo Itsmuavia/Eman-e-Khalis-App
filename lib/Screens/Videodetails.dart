@@ -20,15 +20,24 @@ class _VideodetailsState extends State<Videodetails> {
   final List<Map<String, dynamic>> comments = [];
   Uint8List? thumbnail;
   Duration? _hoverPosition;
+  bool _isError = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.video['url']!)
+
+    // ✅ Better initialization with error handling
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.video['url']!))
       ..initialize().then((_) {
-        if (mounted) setState(() {});
-        _controller.play();
+        if (mounted) {
+          setState(() {});
+          _controller.play();
+        }
+      }).catchError((e) {
+        debugPrint("Video init error: $e");
+        setState(() => _isError = true);
       });
+
     _controller.addListener(() {
       if (mounted) setState(() {});
     });
@@ -47,7 +56,8 @@ class _VideodetailsState extends State<Videodetails> {
   void _skipForward() {
     if (!_controller.value.isInitialized) return;
     final newPos = _controller.value.position + const Duration(seconds: 10);
-    _controller.seekTo(newPos < _controller.value.duration ? newPos : _controller.value.duration);
+    _controller.seekTo(
+        newPos < _controller.value.duration ? newPos : _controller.value.duration);
   }
 
   void _skipBackward() {
@@ -57,14 +67,18 @@ class _VideodetailsState extends State<Videodetails> {
   }
 
   Future<void> _generateThumbnail(Duration position) async {
-    final uint8list = await VideoThumbnail.thumbnailData(
-      video: widget.video['url']!,
-      imageFormat: ImageFormat.PNG,
-      maxWidth: 128,
-      quality: 25,
-      timeMs: position.inMilliseconds,
-    );
-    setState(() => thumbnail = uint8list);
+    try {
+      final uint8list = await VideoThumbnail.thumbnailData(
+        video: widget.video['url']!,
+        imageFormat: ImageFormat.PNG,
+        maxWidth: 128,
+        quality: 25,
+        timeMs: position.inMilliseconds,
+      );
+      setState(() => thumbnail = uint8list);
+    } catch (e) {
+      debugPrint("Thumbnail error: $e");
+    }
   }
 
   void _showCommentPopup() {
@@ -82,7 +96,9 @@ class _VideodetailsState extends State<Videodetails> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue.shade700,
@@ -149,7 +165,8 @@ class _VideodetailsState extends State<Videodetails> {
           : PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          padding:
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [Color(0xFFe6f0fb), Color(0xFFdff3ff)],
@@ -165,10 +182,11 @@ class _VideodetailsState extends State<Videodetails> {
             children: [
               // Back Button
               IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.blueGrey),
+                icon: const Icon(Icons.arrow_back_ios,
+                    color: Colors.blueGrey),
                 onPressed: () => Navigator.pop(context),
               ),
-              const SizedBox(width:25),
+              const SizedBox(width: 25),
               Container(
                 width: 44,
                 height: 44,
@@ -218,17 +236,26 @@ class _VideodetailsState extends State<Videodetails> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: _isError
+          ? const Center(
+          child: Text(
+            "⚠️ Video failed to load. Please check URL/format.",
+            style: TextStyle(color: Colors.red, fontSize: 16),
+          ))
+          : SingleChildScrollView(
         child: Column(
           children: [
             AspectRatio(
-              aspectRatio: _controller.value.isInitialized ? _controller.value.aspectRatio : 16 / 9,
+              aspectRatio: _controller.value.isInitialized
+                  ? _controller.value.aspectRatio
+                  : 16 / 9,
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
                   _controller.value.isInitialized
                       ? ClipRRect(
-                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+                    borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(12)),
                     child: VideoPlayer(_controller),
                   )
                       : const Center(child: CircularProgressIndicator()),
@@ -249,63 +276,50 @@ class _VideodetailsState extends State<Videodetails> {
                       right: 0,
                       child: Column(
                         children: [
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onHorizontalDragUpdate: (details) async {
-                              final box = context.findRenderObject() as RenderBox;
-                              final localDx = details.localPosition.dx.clamp(0, box.size.width);
-                              final relative = localDx / box.size.width;
-                              final seekPos = _controller.value.duration * relative;
-                              _controller.seekTo(seekPos);
-                              await _generateThumbnail(seekPos);
-                              setState(() => _hoverPosition = seekPos);
-                            },
-                            child: Stack(
-                              children: [
-                                VideoProgressIndicator(
-                                  _controller,
-                                  allowScrubbing: true,
-                                  colors: VideoProgressColors(
-                                    playedColor: Colors.red,
-                                    backgroundColor: Colors.white30,
-                                  ),
-                                ),
-                                if (thumbnail != null && _hoverPosition != null)
-                                  Positioned(
-                                    bottom: 30,
-                                    left: MediaQuery.of(context).size.width *
-                                        (_hoverPosition!.inMilliseconds / _controller.value.duration.inMilliseconds) -
-                                        40,
-                                    child: Container(
-                                      width: 80,
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.white),
-                                          borderRadius: BorderRadius.circular(6),
-                                          image: DecorationImage(
-                                              image: MemoryImage(thumbnail!), fit: BoxFit.cover)),
-                                    ),
-                                  ),
-                              ],
+                          VideoProgressIndicator(
+                            _controller,
+                            allowScrubbing: true,
+                            colors: const VideoProgressColors(
+                              playedColor: Colors.red,
+                              backgroundColor: Colors.white30,
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
                             children: [
                               IconButton(
-                                icon: Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                icon: Icon(
+                                    _controller.value.isPlaying
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
                                     color: Colors.white),
                                 onPressed: () => setState(() {
-                                  _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                                  _controller.value.isPlaying
+                                      ? _controller.pause()
+                                      : _controller.play();
                                 }),
                               ),
-                              IconButton(icon: const Icon(Icons.replay_10, color: Colors.white), onPressed: _skipBackward),
-                              IconButton(icon: const Icon(Icons.forward_10, color: Colors.white), onPressed: _skipForward),
+                              IconButton(
+                                  icon: const Icon(Icons.replay_10,
+                                      color: Colors.white),
+                                  onPressed: _skipBackward),
+                              IconButton(
+                                  icon: const Icon(Icons.forward_10,
+                                      color: Colors.white),
+                                  onPressed: _skipForward),
                               Text(
                                 "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
-                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 12),
                               ),
-                              IconButton(icon: Icon(isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen, color: Colors.white), onPressed: _toggleFullscreen),
+                              IconButton(
+                                  icon: Icon(
+                                      isFullscreen
+                                          ? Icons.fullscreen_exit
+                                          : Icons.fullscreen,
+                                      color: Colors.white),
+                                  onPressed: _toggleFullscreen),
                             ],
                           ),
                         ],
@@ -317,51 +331,63 @@ class _VideodetailsState extends State<Videodetails> {
             if (!isFullscreen)
               Container(
                 padding: const EdgeInsets.all(14),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(widget.video['title']!,
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 6),
-                      Text(
-                        "By: ${widget.video['writer']}",
-                        style: TextStyle(color: Colors.blueGrey.shade700),
-                      ),
-                      const SizedBox(height: 14),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _actionButton(Icons.thumb_up_alt_outlined, "Like", () {}),
-                          _actionButton(Icons.thumb_down_alt_outlined, "Dislike", () {}),
-                          _actionButton(Icons.message, "Comment", _showCommentPopup),
-                          _actionButton(Icons.download, "Download", () {}),
-                          _actionButton(Icons.share, "Share", () {}),
-                        ],
-                      ),
-                      const Divider(height: 30, color: Colors.blueGrey),
-                      const Text("Comments", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
-                      if (comments.isEmpty)
-                        Center(child: Text("No comments yet", style: TextStyle(color: Colors.blueGrey.shade400))),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: comments.length,
-                        itemBuilder: (context, index) {
-                          final c = comments[index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 4),
-                            child: ListTile(
-                              leading: const CircleAvatar(child: Icon(Icons.person)),
-                              title: Text(c['user']),
-                              subtitle: Text("${c['text']} • ${timeAgo(c['time'])}"),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.video['title']!,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 6),
+                    Text(
+                      "By: ${widget.video['writer']}",
+                      style: TextStyle(color: Colors.blueGrey.shade700),
+                    ),
+                    const SizedBox(height: 14),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _actionButton(Icons.thumb_up_alt_outlined,
+                            "Like", () {}),
+                        _actionButton(Icons.thumb_down_alt_outlined,
+                            "Dislike", () {}),
+                        _actionButton(Icons.message, "Comment",
+                            _showCommentPopup),
+                        _actionButton(
+                            Icons.download, "Download", () {}),
+                        _actionButton(Icons.share, "Share", () {}),
+                      ],
+                    ),
+                    const Divider(
+                        height: 30, color: Colors.blueGrey),
+                    const Text("Comments",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    if (comments.isEmpty)
+                      Center(
+                          child: Text("No comments yet",
+                              style: TextStyle(
+                                  color: Colors.blueGrey.shade400))),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        final c = comments[index];
+                        return Card(
+                          margin:
+                          const EdgeInsets.symmetric(vertical: 4),
+                          child: ListTile(
+                            leading: const CircleAvatar(
+                                child: Icon(Icons.person)),
+                            title: Text(c['user']),
+                            subtitle: Text(
+                                "${c['text']} • ${timeAgo(c['time'])}"),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
           ],

@@ -94,7 +94,7 @@ class _PrayerpageState extends State<Prayerpage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                gradient:LinearGradient(
+                gradient: LinearGradient(
                   colors: [Colors.blue.shade50, Colors.blue.shade100],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -106,7 +106,13 @@ class _PrayerpageState extends State<Prayerpage> {
               ),
               child: Row(
                 children: [
-                  // Branding Left
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.blueGrey,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                   Expanded(
                     flex: 4,
                     child: Row(
@@ -204,39 +210,41 @@ class _PrayerpageState extends State<Prayerpage> {
               ),
             ),
             Expanded(
-            child: filteredPrayers.isEmpty
-                ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.search_off,
-                      size: 55, color: Colors.green.shade200),
-                  const SizedBox(height: 16),
-                  Text(
-                    _searchQuery.isNotEmpty
-                        ? "No prayers found for '$_searchQuery'"
-                        : "No prayers available",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.green.shade800,
+              child: filteredPrayers.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.search_off,
+                            size: 55,
+                            color: Colors.green.shade200,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            _searchQuery.isNotEmpty
+                                ? "No prayers found for '$_searchQuery'"
+                                : "No prayers available",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.green.shade800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: filteredPrayers.length,
+                      itemBuilder: (context, index) {
+                        return _buildPrayerCard(filteredPrayers[index]);
+                      },
                     ),
-                  ),
-                ],
-              ),
-            )
-                : ListView.builder(
-              itemCount: filteredPrayers.length,
-              itemBuilder: (context, index) {
-                return _buildPrayerCard(filteredPrayers[index]);
-              },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
-
 
   Widget _buildPrayerCard(Map<String, dynamic> prayer) {
     return GestureDetector(
@@ -263,8 +271,11 @@ class _PrayerpageState extends State<Prayerpage> {
                 Container(
                   width: 34,
                   height: 34,
-                  child: Icon(Icons.arrow_back_ios,
-                      size: 25, color: Colors.blueGrey.shade900),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 25,
+                    color: Colors.blueGrey.shade900,
+                  ),
                 ),
 
                 const SizedBox(width: 12),

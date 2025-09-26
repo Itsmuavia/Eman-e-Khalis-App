@@ -75,8 +75,8 @@ class _HajjUmrahPageState extends State<HajjUmrahPage>
       duration: const Duration(milliseconds: 600),
     );
 
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero).animate(
+    _slideAnimation = Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+        .animate(
           CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
         );
 
@@ -97,7 +97,6 @@ class _HajjUmrahPageState extends State<HajjUmrahPage>
       body: SafeArea(
         child: Column(
           children: [
-
             /// Top Header (Branding + Search)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -114,6 +113,13 @@ class _HajjUmrahPageState extends State<HajjUmrahPage>
               ),
               child: Row(
                 children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.blueGrey,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                   Expanded(
                     flex: 4,
                     child: Row(
@@ -189,8 +195,11 @@ class _HajjUmrahPageState extends State<HajjUmrahPage>
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Icon(Icons.clear,
-                                    size: 18, color: Colors.blueGrey),
+                                child: Icon(
+                                  Icons.clear,
+                                  size: 18,
+                                  color: Colors.blueGrey,
+                                ),
                               ),
                             ),
                         ],
@@ -220,7 +229,11 @@ class _HajjUmrahPageState extends State<HajjUmrahPage>
                 ),
                 tabs: const [
                   Tab(
-                    icon:Icon(FontAwesomeIcons.kaaba,size: 22,color: Colors.green,),
+                    icon: Icon(
+                      FontAwesomeIcons.kaaba,
+                      size: 22,
+                      color: Colors.green,
+                    ),
                     text: "Hajj",
                   ),
                   Tab(
@@ -238,14 +251,10 @@ class _HajjUmrahPageState extends State<HajjUmrahPage>
               ),
             ),
 
-
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [
-                  _buildCardList(hajjList),
-                  _buildCardList(umrahList),
-                ],
+                children: [_buildCardList(hajjList), _buildCardList(umrahList)],
               ),
             ),
           ],

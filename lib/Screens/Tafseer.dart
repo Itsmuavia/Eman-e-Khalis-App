@@ -1395,7 +1395,6 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
       body: SafeArea(
         child: Column(
           children: [
-            // Header Section
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
@@ -1482,7 +1481,7 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
 
             if (_tabController.index == 0)
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 40),
+                margin: EdgeInsets.symmetric(horizontal: 0),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(12),
@@ -1500,7 +1499,7 @@ class _TafseerState extends State<Tafseer> with TickerProviderStateMixin {
                   ),
                   labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                   isScrollable: false,
-                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  padding: EdgeInsets.symmetric(horizontal: 40),
                   indicatorPadding: EdgeInsets.zero,
                   splashBorderRadius: BorderRadius.circular(12),
                   tabs: const [
