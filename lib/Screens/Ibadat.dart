@@ -4,6 +4,7 @@ import 'package:emane_khalis_app/Screens/Hadithpage.dart';
 import 'package:emane_khalis_app/Screens/Hajjumrahpage.dart';
 import 'package:emane_khalis_app/Screens/Prayerpage.dart';
 import 'package:emane_khalis_app/Screens/QnA.dart';
+import 'package:emane_khalis_app/Screens/Zakatpage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -250,7 +251,7 @@ class _IbadatState extends State<Ibadat> {
                                   nextPage = HajjUmrahPage();
                                   break;
                                 case "Zakat":
-                                  nextPage = Qna();
+                                  nextPage = Zakatpage();
                                 case "Hadith":
                                   nextPage = Hadithpage();
                                   break;
